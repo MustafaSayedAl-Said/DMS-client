@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row">
+    <section class="col-3">
+      <h6 class="my-3" style="font-weight: bold">Sorting</h6>
+
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        (change)="onSortSelect($event)"
+      >
+        <option *ngFor="let item of sortOptions" [value]="item.value">
+          {{ item.name }}
+        </option>
+      </select>
+    </section>
+    <section class="col-9">
+      <div class="d-flex justify-content-between align-items-center pb-2">
+        <!--paging header-->
+        <app-paging-header
+          
+          [totalCount]="totalCount"
+          [pageSize]="DirectoryParams.pageSize"
+          [pageNumber]="DirectoryParams.pageNumber"
+        ></app-paging-header>
+
+        <div class="col-9 my-3">
+          <div class="input-group">
+            <input
+            (keyup.enter)="OnSearch()"
+              class="form-control mr-2"
+              style="width: 200px"
+              type="text"
+              #search
+              placeholder="Search"
+            />
+            <button class="btn btn-outline-success" (click)="OnSearch()">Search</button>
+            <button class="btn btn-outline-warning" (click)="OnReset()">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col" *ngFor="let item of directories">
+          <app-directory [directory]="item"></app-directory>
+        </div>
+      </div>
+      <!--pager-->
+      <app-pager
+      [pageSize]="DirectoryParams.pageSize"
+      [totalCount]="this.totalCount"
+      (pageChanged)="onPageChanged($event)"
+      ></app-pager>
+    </section>
+  </div>
+</div>
