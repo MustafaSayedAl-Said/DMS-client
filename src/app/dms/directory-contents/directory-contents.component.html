@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="row">
+    <section class="col-3">
+      <h6 class="my-3" style="font-weight: bold">Sorting</h6>
+
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        (change)="onSortSelect($event)"
+      >
+        <option *ngFor="let item of sortOptions" [value]="item.value">
+          {{ item.name }}
+        </option>
+      </select>
+    </section>
+    <section class="col-9">
+      <div class="d-flex justify-content-between align-items-center pb-2">
+        <!--paging header-->
+        <app-paging-header
+          [totalCount]="totalCount"
+          [pageSize]="DocumentParams.pageSize"
+          [pageNumber]="DocumentParams.pageNumber"
+        ></app-paging-header>
+
+        <div class="col-9 my-3">
+          <div class="input-group">
+            <input
+              class="form-control mr-2"
+              style="width: 200px"
+              type="text"
+              #search
+              placeholder="Search"
+            />
+            <button class="btn btn-outline-success">Search</button>
+            <button class="btn btn-outline-warning">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="table-responsive row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+      >
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Date</th>
+              <th scope="col">Visibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of documents; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.userName}}</td>
+              <td>placeholder</td>
+              <td>placeholder</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--pager-->
+      <app-pager
+        [pageSize]="DocumentParams.pageSize"
+        [totalCount]="this.totalCount"
+        (pageChanged)="onPageChanged($event)"
+      ></app-pager>
+    </section>
+  </div>
+</div>

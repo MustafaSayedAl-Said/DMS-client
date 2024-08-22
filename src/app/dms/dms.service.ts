@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPagination } from '../shared/Models/Pagination';
+import { IPaginationDirectories } from '../shared/Models/PaginationDirectories';
 import { map } from 'rxjs';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
+import { DocumentParams } from '../shared/Models/DocumentParams';
+import { IPaginationDocuments } from '../shared/Models/PaginationDocuments';
 
 
 @Injectable({
@@ -26,7 +28,26 @@ export class DmsService {
     params = params.append('WorkspaceId', DirectoryParams.workspaceId.toString());
     params = params.append('pageNumber', DirectoryParams.pageNumber.toString());
     params = params.append('pageSize', DirectoryParams.pageSize.toString());
-    return this.http.get<IPagination>(this.baseUrl + 'directories', {observe: 'response', params})
+    return this.http.get<IPaginationDirectories>(this.baseUrl + 'directories', {observe: 'response', params})
+    .pipe(
+      map(response => {
+        return response.body;
+      })
+    );
+  }
+
+  getDocuments(DocumentParams: DocumentParams){
+    let params = new HttpParams();
+    if(DocumentParams.sort){
+      params = params.append('Sort', DocumentParams.sort);
+    }
+    if(DocumentParams.search){
+      params = params.append('Search', DocumentParams.search);
+    }
+    params = params.append('DirectoryId', DocumentParams.directoryId);
+    params = params.append('pageNumber', DocumentParams.pageNumber.toString());
+    params = params.append('pageSize', DocumentParams.pageSize.toString());
+    return this.http.get<IPaginationDocuments>(this.baseUrl + 'documents', {observe: 'response', params})
     .pipe(
       map(response => {
         return response.body;

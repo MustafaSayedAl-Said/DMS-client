@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DmsComponent } from './dms/dms.component';
 import { DmsModule } from './dms/dms.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { PublicModule } from './public/public.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     CoreModule,
     HttpClientModule,
     DmsModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    PublicModule
   ],
   providers: [
     provideClientHydration()

@@ -1,0 +1,8 @@
+.nav-link {
+    color: white;
+    --bs-text-opacity: 1;
+
+    &.active{
+        color: gray;
+    }
+}

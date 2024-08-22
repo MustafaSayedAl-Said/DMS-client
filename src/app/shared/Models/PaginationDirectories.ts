@@ -1,6 +1,6 @@
 import { IDirectories } from "./Directories"
 
-export interface IPagination {
+export interface IPaginationDirectories {
     count: number
     pageSize: number
     pageNumber: number
