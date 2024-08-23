@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
+import { error } from 'console';
 
 @Component({
   selector: 'app-dms',
@@ -13,6 +14,7 @@ export class DmsComponent implements OnInit {
   directories: IDirectories[];
   DirectoryParams = new DirectoryParams();
   totalCount: number;
+  loading = true;
   sortOptions = [
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
@@ -25,12 +27,17 @@ export class DmsComponent implements OnInit {
   }
 
   getDirectories() {
+    this.loading = true;
     this.dmsService.getDirectories(this.DirectoryParams).subscribe((res) => {
       this.directories = res.data;
       this.totalCount = res.count;
       console.log(this.totalCount);
       this.DirectoryParams.pageNumber = res.pageNumber;
       this.DirectoryParams.pageSize = res.pageSize;
+      this.loading = false;
+    }, error=>{
+      this.loading = false;
+      console.log(error);
     });
   }
 

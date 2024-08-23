@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DocumentParams } from '../../shared/Models/DocumentParams';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Modal } from 'bootstrap';
+import { error } from 'console';
 
 @Component({
   selector: 'app-directory-contents',
@@ -20,6 +21,7 @@ export class DirectoryContentsComponent implements OnInit {
   totalCount:number;
   selectedDocument: SafeResourceUrl | null = null;
   isPopupVisible: boolean = false;
+  loading = true;
   sortOptions = [
     {name: 'Name Ascending', value: 'NameAsc'},
     {name: 'Name Descending', value: 'NameDesc'}
@@ -32,12 +34,17 @@ export class DirectoryContentsComponent implements OnInit {
     this.loadDocuments();
   }
   loadDocuments(){
+    this.loading = true;
     this.DocumentParams.directoryId = this.id;
     this.dmsService.getDocuments(this.DocumentParams).subscribe((res) => {
       this.documents = res.data;
       this.totalCount = res.count;
       this.DocumentParams.pageNumber = res.pageNumber;
       this.DocumentParams.pageSize = res.pageSize;
+      this.loading = false;
+    }, error=>{
+      this.loading = false;
+      console.log(error);
     });
   }
 

@@ -4,7 +4,6 @@ import { DirectoryComponent } from './directory/directory.component';
 import { DmsComponent } from './dms.component';
 import { SharedModule } from '../shared/shared.module';
 import { DirectoryContentsComponent } from './directory-contents/directory-contents.component';
-import { RouterModule } from '@angular/router';
 import { DmsRoutingModule } from './dms-routing.module';
 
 

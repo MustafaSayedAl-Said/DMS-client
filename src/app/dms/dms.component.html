@@ -14,10 +14,15 @@
       </select>
     </section>
     <section class="col-9">
+      <div *ngIf="loading" class="text-center">
+        <!-- Display this spinner while loading -->
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <div class="d-flex justify-content-between align-items-center pb-2">
         <!--paging header-->
         <app-paging-header
-          
           [totalCount]="totalCount"
           [pageSize]="DirectoryParams.pageSize"
           [pageNumber]="DirectoryParams.pageNumber"
@@ -26,15 +31,19 @@
         <div class="col-9 my-3">
           <div class="input-group">
             <input
-            (keyup.enter)="OnSearch()"
+              (keyup.enter)="OnSearch()"
               class="form-control mr-2"
               style="width: 200px"
               type="text"
               #search
               placeholder="Search"
             />
-            <button class="btn btn-outline-success" (click)="OnSearch()">Search</button>
-            <button class="btn btn-outline-warning" (click)="OnReset()">Reset</button>
+            <button class="btn btn-outline-success" (click)="OnSearch()">
+              Search
+            </button>
+            <button class="btn btn-outline-warning" (click)="OnReset()">
+              Reset
+            </button>
           </div>
         </div>
       </div>
@@ -45,9 +54,9 @@
       </div>
       <!--pager-->
       <app-pager
-      [pageSize]="DirectoryParams.pageSize"
-      [totalCount]="this.totalCount"
-      (pageChanged)="onPageChanged($event)"
+        [pageSize]="DirectoryParams.pageSize"
+        [totalCount]="this.totalCount"
+        (pageChanged)="onPageChanged($event)"
       ></app-pager>
     </section>
   </div>

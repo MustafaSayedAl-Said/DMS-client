@@ -16,6 +16,12 @@
     </section>
 
     <section class="col-md-9">
+      <div *ngIf="loading" class="text-center">
+        <!-- Display this spinner while loading -->
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Paging Header -->
         <app-paging-header
@@ -50,13 +56,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of documents" (dblclick)="onDocumentClick(item.documentContent)">
+            <tr
+              *ngFor="let item of documents"
+              (dblclick)="onDocumentClick(item.documentContent)"
+            >
               <td>
-                <i class="fa fa-file-text" aria-hidden="true" style="padding: 20px;"></i> {{ item.name }}
+                <i
+                  class="fa fa-file-text"
+                  aria-hidden="true"
+                  style="padding: 20px"
+                ></i>
+                {{ item.name }}
               </td>
-              <td style="padding: 20px;">{{ item.userName }}</td>
-              <td style="padding: 20px;">placeholder</td>
-              <td style="padding: 20px;">placeholder</td>
+              <td style="padding: 20px">{{ item.userName }}</td>
+              <td style="padding: 20px">placeholder</td>
+              <td style="padding: 20px">placeholder</td>
             </tr>
           </tbody>
         </table>
@@ -73,9 +87,18 @@
     </section>
   </div>
   <!-- Custom Popup Modal -->
-  <div *ngIf="isPopupVisible" class="custom-modal" (click)="onModalBackgroundClick($event)">
+  <div
+    *ngIf="isPopupVisible"
+    class="custom-modal"
+    (click)="onModalBackgroundClick($event)"
+  >
     <div class="custom-modal-content">
-      <iframe [src]="selectedDocument" width="100%" height="800px" frameborder="0"></iframe>
+      <iframe
+        [src]="selectedDocument"
+        width="100%"
+        height="800px"
+        frameborder="0"
+      ></iframe>
     </div>
   </div>
 </div>
