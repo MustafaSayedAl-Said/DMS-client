@@ -3,6 +3,7 @@ import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
 import { error } from 'console';
+import { LoaderService } from '../core/services/loader.service';
 
 @Component({
   selector: 'app-dms',
@@ -14,30 +15,29 @@ export class DmsComponent implements OnInit {
   directories: IDirectories[];
   DirectoryParams = new DirectoryParams();
   totalCount: number;
-  loading = true;
   sortOptions = [
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
   ];
 
-  constructor(private dmsService: DmsService) {}
+  constructor(private dmsService: DmsService, private loaderService: LoaderService) {}
 
   ngOnInit(): void {
     this.getDirectories();
   }
 
   getDirectories() {
-    this.loading = true;
+    this.loaderService.loader();
     this.dmsService.getDirectories(this.DirectoryParams).subscribe((res) => {
       this.directories = res.data;
       this.totalCount = res.count;
       console.log(this.totalCount);
       this.DirectoryParams.pageNumber = res.pageNumber;
       this.DirectoryParams.pageSize = res.pageSize;
-      this.loading = false;
+      this.loaderService.hidingLoader();
     }, error=>{
-      this.loading = false;
       console.log(error);
+      this.loaderService.hidingLoader(); 
     });
   }
 
