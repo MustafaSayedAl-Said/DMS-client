@@ -6,8 +6,7 @@ import { PublicComponent } from './public/public.component';
 
 const routes: Routes = [
   {path:'', component:PublicComponent},
-  {path:'dms', component:DmsComponent},
-  {path: 'dms/:id', component: DirectoryContentsComponent},
+  {path:'dms', loadChildren:()=> import('./dms/dms.module').then(mo=>mo.DmsModule)},
   {path:'**', redirectTo:'',pathMatch:'full'}
 ];
 

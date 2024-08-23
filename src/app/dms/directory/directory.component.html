@@ -7,7 +7,7 @@
   />
 
   <div class="card-body">
-    <a class="text-decoration-none" routerLink="/dms/{{ directory.id }}">
+    <a class="text-decoration-none" [routerLink]="['/dms', directory.id, directory.name]">
       <p class="text-uppercase mb-2 custom-text">
         {{ directory.name }}
       </p>
