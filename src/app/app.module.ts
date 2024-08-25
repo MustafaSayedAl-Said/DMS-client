@@ -18,6 +18,7 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgxSpinnerModule} from 'ngx-spinner';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -28,7 +29,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     HttpClientModule,
     PaginationModule.forRoot(),
     PublicModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [
     provideClientHydration(),

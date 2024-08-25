@@ -32,6 +32,12 @@ const routes: Routes = [
     loadChildren: () => import('./dms/dms.module').then((mo) => mo.DmsModule),
     data: { breadcrumb: 'Workspace' },
   },
+  {
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.module').then((mo) => mo.AccountModule),
+    data: { breadcrumb: null },
+  },
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];
 

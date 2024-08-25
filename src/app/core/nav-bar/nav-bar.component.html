@@ -18,15 +18,12 @@
             class="nav-link px-2"
             [routerLink]="['/']"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact:true}"
+            [routerLinkActiveOptions]="{ exact: true }"
             >Public</a
           >
         </li>
         <li>
-          <a
-            class="nav-link px-2"
-            routerLink="/dms"
-            routerLinkActive="active"
+          <a class="nav-link px-2" routerLink="/dms" routerLinkActive="active"
             >My Workspace</a
           >
         </li>
@@ -41,8 +38,47 @@
       </ul>
 
       <div class="text-end">
-        <button type="button" class="btn btn-outline-light me-2">Login</button>
-        <button type="button" class="btn btn-warning">Sign-up</button>
+        <div *ngIf="(currentUser$ | async) === null">
+          <button
+            type="button"
+            routerLink="account/login"
+            class="btn btn-outline-light me-2"
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            routerLink="account/register"
+            class="btn btn-warning"
+          >
+            Sign-up
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="currentUser$ | async" class="btn-group" dropdown>
+        <button
+          id="button-basic"
+          dropdownToggle
+          type="button"
+          class="btn btn-secondary dropdown-toggle"
+          aria-controls="dropdown-basic"
+        >
+          Welcome, {{(currentUser$ | async).displayName}} <span class="caret"></span>
+        </button>
+        <ul
+          id="dropdown-basic"
+          *dropdownMenu
+          class="dropdown-menu"
+          role="menu"
+          aria-labelledby="button-basic"
+        >
+          <li role="menuitem"><a class="dropdown-item" href="#">My Workspace</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem">
+            <a class="dropdown-item" href="#">Logout</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

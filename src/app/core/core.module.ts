@@ -5,10 +5,11 @@ import { RouterModule } from '@angular/router';
 import { TestErrorComponent } from './test-error/test-error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
-import {ToastrModule} from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SectionHeaderComponent } from './section-header/section-header.component';
 import { BreadcrumbComponent } from 'xng-breadcrumb';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 @NgModule({
@@ -17,23 +18,20 @@ import { BreadcrumbComponent } from 'xng-breadcrumb';
     TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    SectionHeaderComponent
+    SectionHeaderComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     ToastrModule.forRoot({
-      positionClass:'toast-bottom-right',
+      positionClass: 'toast-bottom-right',
       countDuplicates: true,
-      preventDuplicates: true
+      preventDuplicates: true,
     }),
     BrowserAnimationsModule,
-    BreadcrumbComponent
-
+    BreadcrumbComponent,
+    BsDropdownModule.forRoot()
   ],
-  exports:[
-    NavBarComponent,
-    SectionHeaderComponent
-  ]
+  exports: [NavBarComponent, SectionHeaderComponent],
 })
-export class CoreModule { }
+export class CoreModule {}

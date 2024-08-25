@@ -20,7 +20,10 @@ export class DmsComponent implements OnInit {
     { name: 'Name Descending', value: 'NameDesc' },
   ];
 
-  constructor(private dmsService: DmsService, private loaderService: LoaderService) {}
+  constructor(
+    private dmsService: DmsService,
+    private loaderService: LoaderService
+  ) {}
 
   ngOnInit(): void {
     this.getDirectories();
@@ -28,17 +31,20 @@ export class DmsComponent implements OnInit {
 
   getDirectories() {
     this.loaderService.loader();
-    this.dmsService.getDirectories(this.DirectoryParams).subscribe((res) => {
-      this.directories = res.data;
-      this.totalCount = res.count;
-      console.log(this.totalCount);
-      this.DirectoryParams.pageNumber = res.pageNumber;
-      this.DirectoryParams.pageSize = res.pageSize;
-      this.loaderService.hidingLoader();
-    }, error=>{
-      console.log(error);
-      this.loaderService.hidingLoader(); 
-    });
+    this.dmsService.getDirectories(this.DirectoryParams).subscribe(
+      (res) => {
+        this.directories = res.data;
+        this.totalCount = res.count;
+        console.log(this.totalCount);
+        this.DirectoryParams.pageNumber = res.pageNumber;
+        this.DirectoryParams.pageSize = res.pageSize;
+        this.loaderService.hidingLoader();
+      },
+      (error) => {
+        console.log(error);
+        this.loaderService.hidingLoader();
+      }
+    );
   }
 
   onSortSelect(sort: Event) {
