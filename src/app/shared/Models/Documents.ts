@@ -1,6 +1,10 @@
 export interface IDocuments {
+  id: number
   name: string
   directoryId: number
   documentContent: string
-  userName: string
+  modifyDate: string
+  isPublic: boolean
+  isDeleted: boolean
+  ownerName: string
 }

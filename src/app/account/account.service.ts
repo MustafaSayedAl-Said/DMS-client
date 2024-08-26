@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, map, of, ReplaySubject } from 'rxjs';
 import { IUser } from '../shared/Models/user';
 import { Router } from '@angular/router';
 import { IWorkspace } from '../shared/Models/Workspaces';
@@ -12,19 +12,15 @@ import { response } from 'express';
 export class AccountService {
 
   _baseURL = 'https://localhost:7030/api/';
-  private currentUser = new ReplaySubject<IUser>(1);
+  private currentUser = new BehaviorSubject<IUser>(null);
   currentUser$ = this.currentUser.asObservable();
 
   constructor(private http:HttpClient, private router:Router) { }
 
-  // getCurrentUserValue(){
-  //   return this.currentUser.value;
-  // }
+  getCurrentUserValue(){
+    return this.currentUser.value;
+  }
   loadCurrentUser(token:string){
-    if(token === null){
-      this.currentUser.next(null);
-      return of(null);
-    }
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', 'Bearer ' + token);
 
@@ -71,14 +67,15 @@ export class AccountService {
     return this.http.get(this._baseURL + 'users/check?email=' + email);
   }
 
-  getWorkspaceId(token: string){
+  getWorkspaceId(){
     let headers = new HttpHeaders();
+    const token = localStorage.getItem('token');
     if(token === null){
       this.currentUser.next(null);
       return of(null);
     }
     headers = headers.set('Authorization', 'Bearer ' + token);
-    return this.http.get<IWorkspace>(this._baseURL + 'users/workspace').pipe(
+    return this.http.get<IWorkspace>(this._baseURL + 'users/workspace', {headers}).pipe(
       map(response => {
         return response.id;
       })

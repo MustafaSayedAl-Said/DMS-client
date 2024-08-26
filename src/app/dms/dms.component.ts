@@ -3,8 +3,8 @@ import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
 import { AccountService } from '../account/account.service';
-import { IWorkspace } from '../shared/Models/Workspaces';
-import { error } from 'console';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Inject } from '@angular/core';
 
 @Component({
   selector: 'app-dms',
@@ -20,15 +20,16 @@ export class DmsComponent implements OnInit {
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
   ];
+  token: string;
 
   constructor(
     private dmsService: DmsService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    this.accountService.getWorkspaceId(token).subscribe((workspaceId) => {
+    this.accountService.getWorkspaceId().subscribe((workspaceId) => {
       if (workspaceId) {
         this.DirectoryParams.workspaceId = workspaceId;
         this.getDirectories();
@@ -73,5 +74,6 @@ export class DmsComponent implements OnInit {
   OnReset() {
     this.searchTerm.nativeElement.value = '';
     this.DirectoryParams.search = '';
+    this.getDirectories();
   }
 }

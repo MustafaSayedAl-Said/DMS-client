@@ -24,14 +24,14 @@ export class AppComponent implements OnInit {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       //if (token) {
-        this.accountService.loadCurrentUser(token).subscribe({
-          next: () => {
-            console.log('load successfully');
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
+      this.accountService.loadCurrentUser(token).subscribe({
+        next: () => {
+          console.log('load successfully');
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
       //}
     }
   }

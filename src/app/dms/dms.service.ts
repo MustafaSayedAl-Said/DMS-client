@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPaginationDirectories } from '../shared/Models/PaginationDirectories';
 import { map } from 'rxjs';
@@ -18,6 +18,9 @@ export class DmsService {
 
   getDirectories(DirectoryParams: DirectoryParams) {
     let params = new HttpParams();
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
     if(DirectoryParams.sort){
       //Sort=NameAsc
       params = params.append('Sort', DirectoryParams.sort);
@@ -28,7 +31,7 @@ export class DmsService {
     params = params.append('WorkspaceId', DirectoryParams.workspaceId.toString());
     params = params.append('pageNumber', DirectoryParams.pageNumber.toString());
     params = params.append('pageSize', DirectoryParams.pageSize.toString());
-    return this.http.get<IPaginationDirectories>(this.baseUrl + 'directories', {observe: 'response', params})
+    return this.http.get<IPaginationDirectories>(this.baseUrl + 'directories', {headers: headers, observe: 'response', params})
     .pipe(
       map(response => {
         return response.body;
@@ -38,6 +41,9 @@ export class DmsService {
 
   getDocuments(DocumentParams: DocumentParams){
     let params = new HttpParams();
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
     if(DocumentParams.sort){
       params = params.append('Sort', DocumentParams.sort);
     }
@@ -47,7 +53,7 @@ export class DmsService {
     params = params.append('DirectoryId', DocumentParams.directoryId);
     params = params.append('pageNumber', DocumentParams.pageNumber.toString());
     params = params.append('pageSize', DocumentParams.pageSize.toString());
-    return this.http.get<IPaginationDocuments>(this.baseUrl + 'documents', {observe: 'response', params})
+    return this.http.get<IPaginationDocuments>(this.baseUrl + 'documents', {headers: headers, observe: 'response', params})
     .pipe(
       map(response => {
         return response.body;

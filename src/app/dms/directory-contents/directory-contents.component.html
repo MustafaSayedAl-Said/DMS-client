@@ -60,9 +60,9 @@
                 ></i>
                 {{ item.name }}
               </td>
-              <td style="padding: 20px">{{ item.userName }}</td>
-              <td style="padding: 20px">placeholder</td>
-              <td style="padding: 20px">placeholder</td>
+              <td style="padding: 20px">{{ item.ownerName }}</td>
+              <td style="padding: 20px">{{ item.modifyDate.split('T')[0] }} </td>
+              <td style="padding: 20px">{{ item.isPublic? "Public":"Private"}}</td>
             </tr>
           </tbody>
         </table>

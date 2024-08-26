@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { delay, finalize, Observable } from 'rxjs';
 import { LoaderService } from '../services/loader.service';
-import { request } from 'http';
+
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
@@ -16,10 +16,12 @@ export class LoadingInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    
+    if (!req.url.includes('users/check')) {
+      this.loaderService.loader();
+    }
 
     return next.handle(req).pipe(
-      //delay(1000),
+      delay(500),
       finalize(() => {
         this.loaderService.hidingLoader();
       })
