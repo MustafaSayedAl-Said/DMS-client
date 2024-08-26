@@ -1,97 +1,104 @@
 <div class="container mt-4">
-    <div class="row mb-4">
-      <section class="col-md-3" *ngIf="documents">
-        <h6 class="font-weight-bold mb-3">Sorting</h6>
-        <select
-          class="form-select"
-          aria-label="Sort documents"
-          (change)="onSortSelect($event)"
-        >
-          <option *ngFor="let item of sortOptions" [value]="item.value">
-            {{ item.name }}
-          </option>
-        </select>
-      </section>
-  
-      <section class="col-md-9">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <!-- Paging Header -->
-          <app-paging-header
-            [totalCount]="totalCount"
-            [pageSize]="DocumentParams.pageSize"
-            [pageNumber]="DocumentParams.pageNumber"
-          ></app-paging-header>
-  
-          <!-- Search and Reset Buttons -->
-          <div class="input-group w-50" *ngIf="documents">
-            <input
-              (keyup.enter)="OnSearch()"
-              class="form-control"
-              type="text"
-              #search
-              placeholder="Search documents..."
-            />
-            <button class="btn btn-success" (click)="OnSearch()">Search</button>
-            <button class="btn btn-warning" (click)="OnReset()">Reset</button>
-          </div>
+  <div class="row mb-4">
+    <section class="col-md-3" *ngIf="documents">
+      <h6 class="font-weight-bold mb-3">Sorting</h6>
+      <select
+        class="form-select"
+        aria-label="Sort documents"
+        (change)="onSortSelect($event)"
+      >
+        <option *ngFor="let item of sortOptions" [value]="item.value">
+          {{ item.name }}
+        </option>
+      </select>
+    </section>
+
+    <section class="col-md-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Paging Header -->
+        <app-paging-header
+          [totalCount]="totalCount"
+          [pageSize]="DocumentParams.pageSize"
+          [pageNumber]="DocumentParams.pageNumber"
+        ></app-paging-header>
+
+        <!-- Search and Reset Buttons -->
+        <div class="input-group w-50" *ngIf="documents">
+          <input
+            (keyup.enter)="OnSearch()"
+            class="form-control"
+            type="text"
+            #search
+            placeholder="Search documents..."
+          />
+          <button class="btn btn-success" (click)="OnSearch()">Search</button>
+          <button class="btn btn-warning" (click)="OnReset()">Reset</button>
         </div>
-  
-        <!-- Document Table -->
-        <div class="table-responsive" *ngIf="documents">
-          <table class="table table-hover table-bordered table-sm">
-            <thead class="table-dark">
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Owner</th>
-                <th scope="col">Date</th>
-                <th scope="col">Visibility</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let item of documents"
-                (dblclick)="onDocumentClick(item.documentContent)"
-              >
-                <td>
+      </div>
+
+      <!-- Document Table -->
+      <div class="table-responsive" *ngIf="documents">
+        <table class="table table-hover table-bordered table-sm">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Date</th>
+              <th scope="col">Visibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of documents"
+              (dblclick)="onDocumentClick(item.documentContent)"
+            >
+              <td>
+                <div class="d-flex align-items-center">
                   <i
                     class="fa fa-file-text"
                     aria-hidden="true"
-                    style="padding: 20px"
+                    style="padding-right: 10px"
                   ></i>
-                  {{ item.name }}
-                </td>
-                <td style="padding: 20px">{{ item.ownerName }}</td>
-                <td style="padding: 20px">{{ item.modifyDate.split('T')[0] }} </td>
-                <td style="padding: 20px">{{ item.isPublic? "Public":"Private"}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-  
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center mt-3" *ngIf="documents">
-          <app-pager
-            [pageSize]="DocumentParams.pageSize"
-            [totalCount]="totalCount"
-            (pageChanged)="onPageChanged($event)"
-          ></app-pager>
-        </div>
-      </section>
-    </div>
-    <!-- Custom Popup Modal -->
-    <div
-      *ngIf="isPopupVisible"
-      class="custom-modal"
-      (click)="onModalBackgroundClick($event)"
-    >
-      <div class="custom-modal-content">
-        <iframe
-          [src]="selectedDocument"
-          width="100%"
-          height="800px"
-          frameborder="0"
-        ></iframe>
+                  <span class="text-wrap" style="flex: 1">{{ item.name }}</span>
+                </div>
+              </td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.ownerName }}
+              </td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.modifyDate.split("T")[0] }}
+              </td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.isPublic ? "Public" : "Private" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-center mt-3" *ngIf="documents">
+        <app-pager
+          [pageSize]="DocumentParams.pageSize"
+          [totalCount]="totalCount"
+          (pageChanged)="onPageChanged($event)"
+        ></app-pager>
+      </div>
+    </section>
+  </div>
+  <!-- Custom Popup Modal -->
+  <div
+    *ngIf="isPopupVisible"
+    class="custom-modal"
+    (click)="onModalBackgroundClick($event)"
+  >
+    <div class="custom-modal-content">
+      <iframe
+        [src]="selectedDocument"
+        width="100%"
+        height="800px"
+        frameborder="0"
+      ></iframe>
     </div>
   </div>
-  
+</div>

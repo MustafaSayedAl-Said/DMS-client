@@ -53,16 +53,24 @@
               (dblclick)="onDocumentClick(item.documentContent)"
             >
               <td>
-                <i
-                  class="fa fa-file-text"
-                  aria-hidden="true"
-                  style="padding: 20px"
-                ></i>
-                {{ item.name }}
+                <div class="d-flex align-items-center">
+                  <i
+                    class="fa fa-file-text"
+                    aria-hidden="true"
+                    style="padding-right: 10px"
+                  ></i>
+                  <span class="text-wrap" style="flex: 1">{{ item.name }}</span>
+                </div>
               </td>
-              <td style="padding: 20px">{{ item.ownerName }}</td>
-              <td style="padding: 20px">{{ item.modifyDate.split('T')[0] }} </td>
-              <td style="padding: 20px">{{ item.isPublic? "Public":"Private"}}</td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.ownerName }}
+              </td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.modifyDate.split("T")[0] }}
+              </td>
+              <td class="text-nowrap" style="padding: 20px">
+                {{ item.isPublic ? "Public" : "Private" }}
+              </td>
             </tr>
           </tbody>
         </table>
