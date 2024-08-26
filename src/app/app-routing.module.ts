@@ -4,6 +4,7 @@ import { PublicComponent } from './public/public.component';
 import { TestErrorComponent } from './core/test-error/test-error.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'dms',
+    canActivate:[AuthGuard],
     loadChildren: () => import('./dms/dms.module').then((mo) => mo.DmsModule),
     data: { breadcrumb: 'Workspace' },
   },

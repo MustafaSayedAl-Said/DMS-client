@@ -17,6 +17,8 @@ import { PublicModule } from './public/public.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { HeaderInterceptor } from './core/interceptors/header.interceptor';
 
 
 @NgModule({
@@ -36,6 +38,12 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    provideClientHydration(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
   ],

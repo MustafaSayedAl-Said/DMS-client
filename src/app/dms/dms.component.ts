@@ -2,8 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
+import { AccountService } from '../account/account.service';
+import { IWorkspace } from '../shared/Models/Workspaces';
 import { error } from 'console';
-import { LoaderService } from '../core/services/loader.service';
 
 @Component({
   selector: 'app-dms',
@@ -22,15 +23,24 @@ export class DmsComponent implements OnInit {
 
   constructor(
     private dmsService: DmsService,
-    private loaderService: LoaderService
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
-    this.getDirectories();
+    const token = localStorage.getItem('token');
+    this.accountService.getWorkspaceId(token).subscribe((workspaceId) => {
+      if (workspaceId) {
+        this.DirectoryParams.workspaceId = workspaceId;
+        this.getDirectories();
+      } else {
+        console.error('Workspace ID is not available');
+      }
+      (error) => {
+        console.error('Error retrieving workspace id');
+      };
+    });
   }
-
   getDirectories() {
-    this.loaderService.loader();
     this.dmsService.getDirectories(this.DirectoryParams).subscribe(
       (res) => {
         this.directories = res.data;
@@ -38,11 +48,9 @@ export class DmsComponent implements OnInit {
         console.log(this.totalCount);
         this.DirectoryParams.pageNumber = res.pageNumber;
         this.DirectoryParams.pageSize = res.pageSize;
-        this.loaderService.hidingLoader();
       },
       (error) => {
         console.log(error);
-        this.loaderService.hidingLoader();
       }
     );
   }
@@ -65,7 +73,5 @@ export class DmsComponent implements OnInit {
   OnReset() {
     this.searchTerm.nativeElement.value = '';
     this.DirectoryParams.search = '';
-    this.DirectoryParams = new DirectoryParams();
-    this.getDirectories();
   }
 }

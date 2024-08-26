@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AccountService } from './account/account.service';
-import { LoaderService } from './core/services/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +10,7 @@ import { LoaderService } from './core/services/loader.service';
 export class AppComponent implements OnInit {
   showHeader: boolean = true;
   title = 'DMS';
-  constructor(
-    private router: Router,
-    private accountService: AccountService,
-    private loaderService: LoaderService
-  ) {
+  constructor(private router: Router, private accountService: AccountService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.showHeader =
@@ -28,19 +23,16 @@ export class AppComponent implements OnInit {
   loadCurrentUser() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
-      if (token) {
-        this.loaderService.loader();
+      //if (token) {
         this.accountService.loadCurrentUser(token).subscribe({
           next: () => {
             console.log('load successfully');
-            this.loaderService.hidingLoader();
           },
           error: (err) => {
             console.log(err);
-            this.loaderService.hidingLoader();
           },
         });
-      }
+      //}
     }
   }
 

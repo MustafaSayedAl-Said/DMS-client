@@ -20,17 +20,17 @@ export class ErrorInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
-      //delay(1000),
+      delay(1000),
       catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {
           if (err.error.errors) {
-            throw err.error;
+            this.toast.error(err.error.errors[0]);
           } else {
-            this.toast.error(err.error.message, err.error.statusCode);
+            this.toast.error(err.error);
           }
         }
         if (err.status === 401) {
-          this.toast.error(err.error.message, err.error.statusCode);
+          this.toast.error(err.error);
         }
         if (err.status === 404) {
           console.error('Error 404: Resource not found.');

@@ -33,7 +33,6 @@ export class DirectoryContentsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService,
-    private loaderService: LoaderService
   ) {}
   ngOnInit(): void {
     this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -43,7 +42,6 @@ export class DirectoryContentsComponent implements OnInit {
     this.loadDocuments();
   }
   loadDocuments() {
-    this.loaderService.loader();
     this.DocumentParams.directoryId = this.id;
     this.dmsService.getDocuments(this.DocumentParams).subscribe(
       (res) => {
@@ -51,11 +49,9 @@ export class DirectoryContentsComponent implements OnInit {
         this.totalCount = res.count;
         this.DocumentParams.pageNumber = res.pageNumber;
         this.DocumentParams.pageSize = res.pageSize;
-        this.loaderService.hidingLoader();
       },
       (error) => {
         console.log(error);
-        this.loaderService.hidingLoader();
       }
     );
   }

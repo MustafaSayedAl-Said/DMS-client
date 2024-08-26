@@ -1,5 +1,5 @@
 export class DirectoryParams {
-  workspaceId: number = 19;
+  workspaceId: number;
   sort: string = 'NameAsc';
   pageNumber:number = 1;
   pageSize:number = 6;

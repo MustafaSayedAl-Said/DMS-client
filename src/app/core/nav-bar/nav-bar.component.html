@@ -64,7 +64,11 @@
           class="btn btn-secondary dropdown-toggle"
           aria-controls="dropdown-basic"
         >
-          Welcome, {{(currentUser$ | async).displayName}} <span class="caret"></span>
+          <span style="font-weight: bold"
+            >Welcome, {{ (currentUser$ | async).displayName }}</span
+          >
+
+          <span class="caret"></span>
         </button>
         <ul
           id="dropdown-basic"
@@ -73,10 +77,16 @@
           role="menu"
           aria-labelledby="button-basic"
         >
-          <li role="menuitem"><a class="dropdown-item" href="#">My Workspace</a></li>
+          <li role="menuitem">
+            <a class="dropdown-item custom-dropdown-item" routerLink="/dms"
+              ><i class="fa fa-building-o mx-1"></i> My Workspace</a
+            >
+          </li>
           <li class="divider dropdown-divider"></li>
           <li role="menuitem">
-            <a class="dropdown-item" href="#">Logout</a>
+            <a (click)="logout()" class="dropdown-item custom-dropdown-item" href="#"
+              ><i class="fa fa-sign-out mx-1"></i> Logout</a
+            >
           </li>
         </ul>
       </div>

@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { AccountService } from '../account.service';
 import { LoaderService } from '../../core/services/loader.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,29 +16,47 @@ import { LoaderService } from '../../core/services/loader.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  constructor(private accountService: AccountService, private loaderService: LoaderService) {}
+  returnUrl: string;
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/';
     this.createLoginForm();
   }
 
   createLoginForm() {
-    this.loginForm = new FormGroup({
-      email: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
+    this.loginForm = this.fb.group({
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$'),
+        ],
+      ],
+      password: ['', Validators.required],
     });
   }
 
+  get _email() {
+    return this.loginForm.get('email');
+  }
+
+  get _password() {
+    return this.loginForm.get('password');
+  }
+
   onSubmit() {
-    this.loaderService.loader();
     this.accountService.login(this.loginForm.value).subscribe({
       next: () => {
-        console.log('login success');
-        this.loaderService.hidingLoader();
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
         console.error(err);
-        this.loaderService.hidingLoader();
       },
     });
   }

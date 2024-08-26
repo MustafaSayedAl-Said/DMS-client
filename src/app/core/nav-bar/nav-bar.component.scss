@@ -6,3 +6,9 @@
         color: gray;
     }
 }
+
+
+.custom-dropdown-item:focus,
+.custom-dropdown-item:active {
+  background-color: grey !important;
+}
