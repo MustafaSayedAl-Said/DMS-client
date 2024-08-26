@@ -12,6 +12,16 @@ export class AccountService {
   _baseURL = 'https://localhost:7030/api/';
   private currentUser = new BehaviorSubject<IUser>(null);
   currentUser$ = this.currentUser.asObservable();
+  private workspaceNameSubject = new BehaviorSubject<string>('My Workspace');
+  workspaceName$ = this.workspaceNameSubject.asObservable();
+
+  setWorkspaceName(name: string) {
+    this.workspaceNameSubject.next(name);
+  }
+
+  getWorkspaceNameFromSubject() {
+    return this.workspaceName$;
+  }
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -63,6 +73,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem('token');
     this.currentUser.next(null);
+    this.workspaceNameSubject.next(null);
     this.router.navigateByUrl('/');
   }
 
@@ -70,7 +81,7 @@ export class AccountService {
     return this.http.get(this._baseURL + 'users/check?email=' + email);
   }
 
-  getWorkspaceId() {
+  getWorkspaceName() {
     let headers = new HttpHeaders();
     const token = localStorage.getItem('token');
     if (token === null) {
@@ -82,7 +93,7 @@ export class AccountService {
       .get<IWorkspace>(this._baseURL + 'users/workspace', { headers })
       .pipe(
         map((response) => {
-          return response.id;
+          return response.name;
         })
       );
   }

@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
 import { AccountService } from '../account/account.service';
-import { PLATFORM_ID, Inject } from '@angular/core';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-dms',
@@ -20,14 +20,20 @@ export class DmsComponent implements OnInit {
     { name: 'Name Descending', value: 'NameDesc' },
   ];
   token: string;
+  workspaceName: string = 'My Workspace';
 
   constructor(
     private dmsService: DmsService,
     private accountService: AccountService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
+    this.accountService.getWorkspaceName().subscribe((name)=>{
+      this.workspaceName = name;
+      this.breadcrumbService.set('dms', this.workspaceName);
+      console.log("Workspace Name: ", this.workspaceName);
+    })
     this.getDirectories();
   }
   getDirectories() {

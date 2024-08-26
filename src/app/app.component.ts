@@ -24,16 +24,28 @@ export class AppComponent implements OnInit {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
-      this.accountService.loadCurrentUser(token).subscribe({
-        next: () => {
-          console.log('load successfully');
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+        this.accountService.loadCurrentUser(token).subscribe({
+          next: () => {
+            console.log('load successfully');
+            this.loadWorkspaceName();
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       }
     }
+  }
+  loadWorkspaceName() {
+    this.accountService.getWorkspaceName().subscribe({
+      next: (name: string) => {
+        this.accountService.setWorkspaceName(name);
+        console.log('Workspace name loaded: ', name);
+      },
+      error: (err) => {
+        console.log('Error loading workspace name', err);
+      },
+    });
   }
 
   ngOnInit(): void {
