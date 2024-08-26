@@ -3,7 +3,6 @@ import { IDirectories } from '../shared/Models/Directories';
 import { DmsService } from './dms.service';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
 import { AccountService } from '../account/account.service';
-import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
 
 @Component({
@@ -29,32 +28,25 @@ export class DmsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.accountService.getWorkspaceId().subscribe((workspaceId) => {
-      if (workspaceId) {
-        this.DirectoryParams.workspaceId = workspaceId;
-        this.getDirectories();
-      } else {
-        console.error('Workspace ID is not available');
-      }
-      (error) => {
-        console.error('Error retrieving workspace id');
-      };
-    });
+    this.getDirectories();
   }
   getDirectories() {
-    this.dmsService.getDirectories(this.DirectoryParams).subscribe(
-      (res) => {
-        this.directories = res.data;
-        this.totalCount = res.count;
-        console.log(this.totalCount);
-        this.DirectoryParams.pageNumber = res.pageNumber;
-        this.DirectoryParams.pageSize = res.pageSize;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+    this.dmsService.getDirectories(this.DirectoryParams).subscribe({
+        next: (res) => {
+            this.directories = res.data;
+            this.totalCount = res.count;
+            console.log(this.totalCount);
+            this.DirectoryParams.pageNumber = res.pageNumber;
+            this.DirectoryParams.pageSize = res.pageSize;
+        },
+        error: (error) => {
+            console.log(error);
+        },
+        complete: () => {
+            console.log('Request completed');
+        }
+    });
+}
 
   onSortSelect(sort: Event) {
     let sortValue = (sort.target as HTMLInputElement).value;

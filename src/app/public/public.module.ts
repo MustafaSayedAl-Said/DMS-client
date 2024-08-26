@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PublicComponent } from './public.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -9,7 +10,9 @@ import { PublicComponent } from './public.component';
     PublicComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
+
   ],
   exports:[
     PublicComponent

@@ -1,0 +1,77 @@
+.custom-table {
+    tbody tr {
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 10px 0;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #f1f1f1;
+      }
+  
+      td {
+        padding: 60px; /* Adjusted padding for better spacing */
+        vertical-align: middle; /* Center content vertically */
+      }
+    }
+  
+    th {
+      font-weight: 600;
+      padding: 15px;
+      background-color: #f8f9fa;
+      text-align: left; /* Ensure text is aligned left */
+      border-bottom: 2px solid #dee2e6; /* Add bottom border for better separation */
+    }
+  }
+  
+  .custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  
+    .custom-modal-content {
+      background-color: #fff;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 1000px;
+      position: relative;
+      padding: 20px; /* Added padding for content inside the modal */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Added subtle shadow for depth */
+      transition: transform 0.3s ease; /* Smooth transition for modal appearance */
+      transform: scale(1); /* Initial scale for animation effect */
+  
+      &.fade-in {
+        transform: scale(1.05); /* Slightly scale up on display for effect */
+      }
+  
+      &.fade-out {
+        transform: scale(0.95); /* Slightly scale down on close for effect */
+      }
+    }
+  
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      border: none;
+      background: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      color: #333; /* Darker color for better visibility */
+      transition: color 0.3s ease;
+  
+      &:hover {
+        color: #ff6b6b; /* Change color on hover for a better effect */
+      }
+    }
+  }
+  

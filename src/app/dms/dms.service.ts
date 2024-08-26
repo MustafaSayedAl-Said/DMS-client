@@ -28,10 +28,9 @@ export class DmsService {
     if(DirectoryParams.search){
       params = params.append('Search', DirectoryParams.search);
     }
-    params = params.append('WorkspaceId', DirectoryParams.workspaceId.toString());
     params = params.append('pageNumber', DirectoryParams.pageNumber.toString());
     params = params.append('pageSize', DirectoryParams.pageSize.toString());
-    return this.http.get<IPaginationDirectories>(this.baseUrl + 'directories', {headers: headers, observe: 'response', params})
+    return this.http.get<IPaginationDirectories>(this.baseUrl + 'directories/user', {headers: headers, observe: 'response', params})
     .pipe(
       map(response => {
         return response.body;

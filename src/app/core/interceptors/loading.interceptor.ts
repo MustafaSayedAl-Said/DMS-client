@@ -16,14 +16,15 @@ export class LoadingInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (!req.url.includes('users/check')) {
+    if (!req.url.includes('check')) {
       this.loaderService.loader();
     }
 
     return next.handle(req).pipe(
-      delay(500),
+      delay(1000),
       finalize(() => {
         this.loaderService.hidingLoader();
+        console.log('Finished handling request:', req.url);
       })
     );
   }
