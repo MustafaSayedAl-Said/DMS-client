@@ -10,7 +10,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SectionHeaderComponent } from './section-header/section-header.component';
 import { BreadcrumbComponent } from 'xng-breadcrumb';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     NotFoundComponent,
     ServerErrorComponent,
     SectionHeaderComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     }),
     BrowserAnimationsModule,
     BreadcrumbComponent,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    MatDialogModule
   ],
   exports: [NavBarComponent, SectionHeaderComponent],
 })

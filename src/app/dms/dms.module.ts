@@ -8,12 +8,13 @@ import { DmsRoutingModule } from './dms-routing.module';
 
 
 
+
 @NgModule({
   declarations: [DmsComponent, DirectoryComponent, DirectoryContentsComponent],
   imports: [
     CommonModule,
     SharedModule,
-    DmsRoutingModule
+    DmsRoutingModule,
   ],
   exports: [
     DirectoryComponent,

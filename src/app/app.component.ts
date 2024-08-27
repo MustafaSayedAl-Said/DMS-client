@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AccountService } from './account/account.service';
+import { IWorkspace } from './shared/Models/Workspaces';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
         this.accountService.loadCurrentUser(token).subscribe({
           next: () => {
             console.log('load successfully');
-            this.loadWorkspaceName();
+            this.loadWorkspace();
           },
           error: (err) => {
             console.log(err);
@@ -36,10 +37,11 @@ export class AppComponent implements OnInit {
       }
     }
   }
-  loadWorkspaceName() {
-    this.accountService.getWorkspaceName().subscribe({
-      next: (name: string) => {
-        this.accountService.setWorkspaceName(name);
+  loadWorkspace() {
+    this.accountService.getWorkspace().subscribe({
+      next: (workspace: IWorkspace) => {
+        this.accountService.setWorkspaceName(workspace.name);
+        this.accountService.setWorkspaceId(workspace.id)
         console.log('Workspace name loaded: ', name);
       },
       error: (err) => {
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit {
       },
     });
   }
+  
 
   ngOnInit(): void {
     this.loadCurrentUser();

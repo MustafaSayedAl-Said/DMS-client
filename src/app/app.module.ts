@@ -9,17 +9,13 @@ import { CoreModule } from './core/core.module';
 import {
   HTTP_INTERCEPTORS,
   HttpClientModule,
-  provideHttpClient,
-  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PublicModule } from './public/public.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {NgxSpinnerModule} from 'ngx-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
-import { HeaderInterceptor } from './core/interceptors/header.interceptor';
-
 
 @NgModule({
   declarations: [AppComponent],

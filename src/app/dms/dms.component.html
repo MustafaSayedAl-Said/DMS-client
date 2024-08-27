@@ -1,6 +1,13 @@
 <div class="container">
   <div class="row">
     <section class="col-3" *ngIf="directories">
+      <button
+        class="btn btn-secondary"
+        style="margin-bottom: 20px"
+        (click)="openDialog()"
+      >
+        <i class="fa fa-plus"></i> Add New Directory
+      </button>
       <h6 class="my-3" style="font-weight: bold">Sorting</h6>
 
       <select
@@ -47,11 +54,48 @@
         </div>
       </div>
       <!--pager-->
-      <app-pager *ngIf="directories"
+      <app-pager
+        *ngIf="directories"
         [pageSize]="DirectoryParams.pageSize"
         [totalCount]="this.totalCount"
         (pageChanged)="onPageChanged($event)"
       ></app-pager>
     </section>
   </div>
+</div>
+
+<!-- Custom dialog to add directory -->
+<div class="custom-dialog" *ngIf="showDialog">
+  <form [formGroup]="directoryNameForm" novalidate (ngSubmit)="save()">
+    <div class="custom-dialog-content">
+      <h2 class="custom-dialog-title">Add New Directory</h2>
+      <input
+        formControlName="name"
+        class="form-control mb-3"
+        placeholder="Enter directory name"
+        [class.is-invalid]="_name.invalid && _name.touched"
+        [class.is-valid]="_name.valid"
+      />
+      <div *ngIf="_name.invalid && _name.touched">
+        <small
+          class="text-danger"
+          *ngIf="_name?.errors?.['required']"
+          style="font-weight: bold"
+          >Name required</small
+        >
+      </div>
+      <div class="custom-dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-outline-success"
+          [disabled]="directoryNameForm.invalid"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
