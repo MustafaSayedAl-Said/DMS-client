@@ -4,10 +4,12 @@ import { DmsService } from '../dms.service';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentParams } from '../../shared/Models/DocumentParams';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Modal } from 'bootstrap';
-import { error } from 'console';
+import { MatDialog } from '@angular/material/dialog';
 import { BreadcrumbService } from 'xng-breadcrumb';
-import { LoaderService } from '../../core/services/loader.service';
+import { AccountService } from '../../account/account.service';
+import { ToastrService } from 'ngx-toastr';
+import { ConfirmationDialogComponent } from '../../core/confirmation-dialog/confirmation-dialog.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-directory-contents',
@@ -16,6 +18,7 @@ import { LoaderService } from '../../core/services/loader.service';
 })
 export class DirectoryContentsComponent implements OnInit {
   @ViewChild('search') searchTerm: ElementRef;
+  workspaceName: string;
   id: number;
   name: string;
   documents: IDocuments[];
@@ -27,19 +30,41 @@ export class DirectoryContentsComponent implements OnInit {
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
   ];
+  fileUploadForm: FormGroup;
+  selectedFile: File = null;
+  fileName = '';
+  showDialog = false;
 
   constructor(
     private dmsService: DmsService,
     private activatedRoute: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService,
+    private accountService: AccountService,
+    private toast: ToastrService,
+    public dialog: MatDialog,
+    private fb: FormBuilder
   ) {}
   ngOnInit(): void {
+    this.createDocumentFileForm();
     this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
     this.name = this.activatedRoute.snapshot.paramMap.get('name');
-    this.breadcrumbService.set('dms/:id/:name', this.name);
-    console.log(this.activatedRoute.snapshot.params);
-    this.loadDocuments();
+    this.accountService.getWorkspaceNameFromSubject().subscribe((name) => {
+      this.workspaceName = name;
+      this.breadcrumbService.set('dms', this.workspaceName);
+      this.breadcrumbService.set('dms/:id/:name', this.name);
+      console.log(this.activatedRoute.snapshot.params);
+      this.loadDocuments();
+    });
+  }
+
+  createDocumentFileForm() {
+    this.fileUploadForm = this.fb.group({
+      file: [null, Validators.required],
+    });
+  }
+  get _file() {
+    return this.fileUploadForm.get('file');
   }
   loadDocuments() {
     this.DocumentParams.directoryId = this.id;
@@ -94,5 +119,71 @@ export class DirectoryContentsComponent implements OnInit {
     if (target.classList.contains('custom-modal')) {
       this.closePopup();
     }
+  }
+
+  toggleVisibility(id: number) {
+    this.dmsService.updateDocumentVisibility(id).subscribe({
+      next: () => {
+        this.toast.success('Visibility updated successfully');
+        this.loadDocuments();
+      },
+      error: (err) => {
+        this.toast.error('Error updating visiblity', err);
+      },
+    });
+  }
+  openDialog(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.deleteDocument(id);
+      }
+    });
+  }
+
+  deleteDocument(id: number) {
+    this.dmsService.deleteDocument(id).subscribe({
+      next: () => {
+        this.toast.success('Document deleted Successfully');
+        this.loadDocuments();
+      },
+      error: (err) => {
+        this.toast.error('Error deleting document', err);
+      },
+    });
+  }
+
+  openDocumentAddDialog(){
+    this.showDialog = true;
+  }
+  cancel() {
+    this.showDialog = false;
+    this.fileUploadForm.patchValue({ file: null });
+    this.fileName = '';
+  }
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+    this.fileName = this.selectedFile.name;
+    this.fileUploadForm.patchValue({
+      file: this.selectedFile,
+    });
+  }
+
+  save() {
+    this.dmsService.addDocument(this.selectedFile, this.id).subscribe({
+      next:() => {
+        this.toast.success('Document added Successfully');
+        this.showDialog = false;
+        this.fileUploadForm.patchValue({ file: null });
+        this.fileName = '';
+        this.loadDocuments();
+      },
+      error: (err)=>{
+        this.toast.error('Error adding document', err)
+      }
+    })
+
   }
 }

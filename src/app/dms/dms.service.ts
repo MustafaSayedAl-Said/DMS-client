@@ -134,4 +134,63 @@ export class DmsService {
         })
       );
   }
+
+  updateDocumentVisibility(id: number) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+    const body = { isPublic: true };
+
+    return this.http
+      .patch(this.baseUrl + 'documents/' + id, body, {
+        headers,
+      })
+      .pipe(
+        map(() => {
+          return true;
+        }),
+        catchError((err) => {
+          console.error('Error Adding directory: ', err);
+          return of(false);
+        })
+      );
+  }
+
+  deleteDocument(id: number) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+
+    return this.http.delete(this.baseUrl + 'documents/' + id, { headers }).pipe(
+      map(() => {
+        return true;
+      }),
+      catchError((err) => {
+        console.error('Error deleting document', err);
+        return of(false);
+      })
+    );
+  }
+
+  addDocument(file: File, directoryId: number) {
+    const formData = new FormData();
+    formData.append('DirectoryId', directoryId.toString());
+    formData.append('DocumentContent', file, file.name);
+
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+
+    return this.http
+      .post(this.baseUrl + 'documents', formData, { headers })
+      .pipe(
+        map(() => {
+          return true;
+        }),
+        catchError((err) => {
+          console.error('Error Adding document: ', err);
+          return of(false);
+        })
+      );
+  }
 }
