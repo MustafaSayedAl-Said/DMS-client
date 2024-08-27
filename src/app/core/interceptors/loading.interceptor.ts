@@ -8,7 +8,6 @@ import { Injectable } from '@angular/core';
 import { delay, finalize, Observable } from 'rxjs';
 import { LoaderService } from '../services/loader.service';
 
-
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
   constructor(private loaderService: LoaderService) {}

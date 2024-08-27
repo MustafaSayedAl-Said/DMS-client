@@ -9,7 +9,7 @@ import { IWorkspace } from './shared/Models/Workspaces';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  showHeader: boolean = true;
+  showHeader: boolean = false;
   title = 'DMS';
   constructor(private router: Router, private accountService: AccountService) {
     this.router.events.subscribe((event) => {
@@ -22,6 +22,8 @@ export class AppComponent implements OnInit {
   }
 
   loadCurrentUser() {
+    this.showHeader = false;
+    console.log('Show header: ' + this.showHeader);
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
@@ -29,6 +31,8 @@ export class AppComponent implements OnInit {
           next: () => {
             console.log('load successfully');
             this.loadWorkspace();
+            this.showHeader = true;
+            console.log('Show header: ' + this.showHeader);
           },
           error: (err) => {
             console.log(err);
@@ -41,16 +45,15 @@ export class AppComponent implements OnInit {
     this.accountService.getWorkspace().subscribe({
       next: (workspace: IWorkspace) => {
         this.accountService.setWorkspaceName(workspace.name);
-        this.accountService.setWorkspaceId(workspace.id)
+        this.accountService.setWorkspaceId(workspace.id);
         console.log('Workspace name loaded: ', workspace.name);
-        console.log('Workspace id', workspace.id)
+        console.log('Workspace id', workspace.id);
       },
       error: (err) => {
         console.log('Error loading workspace name', err);
       },
     });
   }
-  
 
   ngOnInit(): void {
     this.loadCurrentUser();

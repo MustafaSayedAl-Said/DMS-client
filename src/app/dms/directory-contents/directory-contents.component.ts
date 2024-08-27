@@ -154,7 +154,7 @@ export class DirectoryContentsComponent implements OnInit {
     });
   }
 
-  openDocumentAddDialog(){
+  openDocumentAddDialog() {
     this.showDialog = true;
   }
   cancel() {
@@ -164,26 +164,47 @@ export class DirectoryContentsComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-    this.fileName = this.selectedFile.name;
-    this.fileUploadForm.patchValue({
-      file: this.selectedFile,
-    });
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+      if (
+        fileExtension !== 'pdf' &&
+        fileExtension !== 'png' &&
+        fileExtension !== 'jpg' &&
+        fileExtension !== 'svg' &&
+        fileExtension !== 'html' &&
+        fileExtension !== 'gif'
+      ) {
+        this.toast.error('Please select a PDF, PNG, JPG, SVG, HTML or GIF file.');
+        input.value = '';
+        this.fileUploadForm.patchValue({
+          file: null,
+        });
+        this.fileName = '';
+      } else {
+        this.selectedFile = event.target.files[0];
+        this.fileName = this.selectedFile.name;
+        this.fileUploadForm.patchValue({
+          file: this.selectedFile,
+        });
+      }
+    }
   }
 
   save() {
     this.dmsService.addDocument(this.selectedFile, this.id).subscribe({
-      next:() => {
+      next: () => {
         this.toast.success('Document added Successfully');
         this.showDialog = false;
         this.fileUploadForm.patchValue({ file: null });
         this.fileName = '';
         this.loadDocuments();
       },
-      error: (err)=>{
-        this.toast.error('Error adding document', err)
-      }
-    })
-
+      error: (err) => {
+        this.toast.error('Error adding document', err);
+      },
+    });
   }
 }
