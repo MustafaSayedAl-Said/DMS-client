@@ -20,14 +20,14 @@ export class AccountService {
   setWorkspaceName(name: string) {
     this.workspaceNameSubject.next(name);
   }
-  setWorkspaceId(id: number){
-    this.workspaceIdSubject.next(id)
+  setWorkspaceId(id: number) {
+    this.workspaceIdSubject.next(id);
   }
 
   getWorkspaceNameFromSubject() {
     return this.workspaceName$;
   }
-  getWorkspaceIdFromSubject(){
+  getWorkspaceIdFromSubject() {
     return this.workspaceId$;
   }
 
@@ -61,6 +61,12 @@ export class AccountService {
         if (user) {
           localStorage.setItem('token', user.token);
           this.currentUser.next(user);
+          this.getWorkspace().subscribe({
+            next: (workspace: IWorkspace) => {
+              this.setWorkspaceName(workspace.name);
+              this.setWorkspaceId(workspace.id);
+            },
+          });
         }
       })
     );
@@ -73,6 +79,12 @@ export class AccountService {
         if (user) {
           localStorage.setItem('token', user.token);
           this.currentUser.next(user);
+          this.getWorkspace().subscribe({
+            next: (workspace: IWorkspace) => {
+              this.setWorkspaceName(workspace.name);
+              this.setWorkspaceId(workspace.id);
+            },
+          });
         }
       })
     );

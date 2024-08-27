@@ -42,7 +42,8 @@ export class AppComponent implements OnInit {
       next: (workspace: IWorkspace) => {
         this.accountService.setWorkspaceName(workspace.name);
         this.accountService.setWorkspaceId(workspace.id)
-        console.log('Workspace name loaded: ', name);
+        console.log('Workspace name loaded: ', workspace.name);
+        console.log('Workspace id', workspace.id)
       },
       error: (err) => {
         console.log('Error loading workspace name', err);
