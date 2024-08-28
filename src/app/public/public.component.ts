@@ -18,10 +18,8 @@ export class PublicComponent implements OnInit {
   totalCount: number;
   selectedDocument: SafeResourceUrl | null = null;
   isPopupVisible: boolean = false;
-  sortOptions = [
-    { name: 'Name Ascending', value: 'NameAsc' },
-    { name: 'Name Descending', value: 'NameDesc' },
-  ];
+  sortField: string = '';
+  sortOrder: string = '';
 
   constructor(
     private publicService: PublicService,
@@ -45,9 +43,15 @@ export class PublicComponent implements OnInit {
     );
   }
 
-  onSortSelect(sort: Event) {
-    let sortValue = (sort.target as HTMLInputElement).value;
-    this.DocumentParams.sort = sortValue;
+  onSort(field: string) {
+    if (this.sortField === field){
+      this.sortOrder = this.sortOrder === 'Asc'? 'Desc' : 'Asc';
+    }
+    else {
+      this.sortField = field;
+      this.sortOrder = 'Asc';
+    }
+    this.DocumentParams.sort = this.sortField + this.sortOrder;
     this.loadPublicDocuments();
   }
 
@@ -64,6 +68,8 @@ export class PublicComponent implements OnInit {
   OnReset() {
     this.searchTerm.nativeElement.value = '';
     this.DocumentParams.search = '';
+    this.sortField = '';
+    this.sortOrder = '';
     this.DocumentParams = new DocumentParams();
     this.loadPublicDocuments();
   }

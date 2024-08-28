@@ -1,19 +1,6 @@
 <div class="container mt-4">
   <div class="row mb-4">
-    <section class="col-md-3" *ngIf="documents">
-      <h6 class="font-weight-bold mb-3">Sorting</h6>
-      <select
-        class="form-select"
-        aria-label="Sort documents"
-        (change)="onSortSelect($event)"
-      >
-        <option *ngFor="let item of sortOptions" [value]="item.value">
-          {{ item.name }}
-        </option>
-      </select>
-    </section>
 
-    <section class="col-md-9">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Paging Header -->
         <app-paging-header
@@ -41,9 +28,25 @@
         <table class="table table-hover table-bordered table-sm">
           <thead class="table-dark">
             <tr>
-              <th scope="col">Name</th>
+              <th scope="col" (click)="onSort('Name')" style="cursor: pointer">
+                Name
+                <i
+                  *ngIf="sortField === 'Name'"
+                  [class.fa-sort-up]="sortOrder === 'Asc'"
+                  [class.fa-sort-down]="sortOrder === 'Desc'"
+                  class="fa"
+                ></i>
+              </th>
               <th scope="col">Owner</th>
-              <th scope="col">Date</th>
+              <th scope="col" (click)="onSort('Date')" style="cursor: pointer">
+                Date
+                <i
+                  *ngIf="sortField === 'Date'"
+                  [class.fa-sort-up]="sortOrder === 'Asc'"
+                  [class.fa-sort-down]="sortOrder === 'Desc'"
+                  class="fa"
+                ></i>
+              </th>
               <th scope="col">Visibility</th>
             </tr>
           </thead>
@@ -84,7 +87,6 @@
           (pageChanged)="onPageChanged($event)"
         ></app-pager>
       </div>
-    </section>
   </div>
   <!-- Custom Popup Modal -->
   <div

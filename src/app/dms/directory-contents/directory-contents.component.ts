@@ -26,14 +26,13 @@ export class DirectoryContentsComponent implements OnInit {
   totalCount: number;
   selectedDocument: SafeResourceUrl | null = null;
   isPopupVisible: boolean = false;
-  sortOptions = [
-    { name: 'Name Ascending', value: 'NameAsc' },
-    { name: 'Name Descending', value: 'NameDesc' },
-  ];
   fileUploadForm: FormGroup;
   selectedFile: File = null;
   fileName = '';
   showDialog = false;
+  sortField: string = '';
+  sortOrder: string = '';
+
 
   constructor(
     private dmsService: DmsService,
@@ -81,9 +80,15 @@ export class DirectoryContentsComponent implements OnInit {
     );
   }
 
-  onSortSelect(sort: Event) {
-    let sortValue = (sort.target as HTMLInputElement).value;
-    this.DocumentParams.sort = sortValue;
+  onSort(field: string) {
+    if (this.sortField === field){
+      this.sortOrder = this.sortOrder === 'Asc'? 'Desc' : 'Asc';
+    }
+    else {
+      this.sortField = field;
+      this.sortOrder = 'Asc';
+    }
+    this.DocumentParams.sort = this.sortField + this.sortOrder;
     this.loadDocuments();
   }
 
@@ -100,6 +105,8 @@ export class DirectoryContentsComponent implements OnInit {
   OnReset() {
     this.searchTerm.nativeElement.value = '';
     this.DocumentParams.search = '';
+    this.sortField = '';
+    this.sortOrder = '';
     this.DocumentParams = new DocumentParams();
     this.loadDocuments();
   }
