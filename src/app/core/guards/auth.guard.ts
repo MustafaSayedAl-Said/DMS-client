@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
               return false;
             }
 
-            console.log('Token is valid');
+            // console.log('Token is valid');
             return true;
           } catch (error) {
             console.error('Invalid token format', error);

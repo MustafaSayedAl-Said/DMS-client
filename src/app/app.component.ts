@@ -13,10 +13,7 @@ export class AppComponent implements OnInit {
   previousUrl: string | null = null;
   showHeader: boolean = false;
   title = 'DMS';
-  constructor(
-    private router: Router,
-    private accountService: AccountService,
-  ) {
+  constructor(private router: Router, private accountService: AccountService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.showHeader =
@@ -28,7 +25,6 @@ export class AppComponent implements OnInit {
 
   loadCurrentUser() {
     this.showHeader = false;
-    console.log('Show header: ' + this.showHeader);
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {

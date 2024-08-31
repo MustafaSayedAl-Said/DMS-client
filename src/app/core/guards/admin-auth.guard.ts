@@ -20,32 +20,32 @@ export class adminAuthGuard implements CanActivate {
   ): Observable<boolean> {
     return this.accountService.currentUser$.pipe(
       map((auth) => {
-        const token = localStorage.getItem('token');
+        const AdminToken = localStorage.getItem('token');
 
         if (auth && auth.isAdmin) {
-          console.log('User is an admin');
           return true;
         }
 
-        if (token) {
+        if (AdminToken) {
           try {
-            const decodedToken: any = jwtDecode(token);
+            const decodedToken: any = jwtDecode(AdminToken);
+            // console.log(decodedToken);
 
             // Check if the token is expired
             const currentTime = Date.now() / 1000;
             if (decodedToken.exp < currentTime) {
               console.log('Token is expired');
-              this.router.navigate([''], {
+              this.router.navigate(['/'], {
                 queryParams: { returnUrl: state.url },
               });
               return false;
             }
-            const isAdmin = decodedToken.isAdmin;
-            if (isAdmin) {
-              console.log('User is an admin');
+            const isAdmin = decodedToken.role;
+            if (isAdmin === 'Admin') {
+              //   console.log('User is an admin');
               return true;
             } else {
-              console.log('User is not an admin');
+              //   console.log('User is not an admin!!!!!');
               this.router.navigate(['/'], {
                 queryParams: { returnUrl: state.url },
               });
@@ -53,16 +53,12 @@ export class adminAuthGuard implements CanActivate {
             }
           } catch (error) {
             console.error('Invalid token format', error);
-            this.router.navigate(['account/login'], {
-              queryParams: { returnUrl: state.url },
-            });
+            this.router.navigate(['account/login']);
             return false;
           }
         }
         console.log('No user authenticated and no valid token');
-        this.router.navigate(['account/login'], {
-          queryParams: { returnUrl: state.url },
-        });
+        this.router.navigate(['account/login']);
         return false;
       })
     );

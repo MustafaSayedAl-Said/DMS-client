@@ -37,7 +37,6 @@ export class DirectoryComponent implements OnInit {
       this.fromUsersTab = params['fromUsers'] === 'true';
       this.workspaceId = +this.route.snapshot.paramMap.get('id');
       this.workspaceName = this.route.snapshot.paramMap.get('name');
-      console.log('this is the name' + this.workspaceName);
       if (this.workspaceName !== null) {
         this.fromUsers = true;
       }
