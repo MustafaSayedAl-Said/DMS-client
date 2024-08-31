@@ -60,7 +60,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => {
-        this.router.navigateByUrl('/');
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.errors = err.errors;

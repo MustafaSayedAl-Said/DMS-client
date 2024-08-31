@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
     private adminService: AdminService,
     private toast: ToastrService,
     private router: Router,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnInit(): void {
@@ -73,5 +73,17 @@ export class UsersComponent implements OnInit {
     this.sortOrder = '';
     this.userParams = new UserParams();
     this.loadUsers();
+  }
+
+  toggleUserLock(id: number) {
+    this.adminService.updateUserLock(id).subscribe({
+      next: () => {
+        this.toast.success('Lock updated successfully');
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.toast.error('Error updating lock', err);
+      },
+    });
   }
 }

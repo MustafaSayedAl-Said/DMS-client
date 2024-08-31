@@ -4,4 +4,5 @@ export interface IUsersGet {
   id: number;
   workspaceName: string;
   workspaceId: number;
+  isLocked: boolean;
 }

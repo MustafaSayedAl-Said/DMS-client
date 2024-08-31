@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserParams } from '../../shared/Models/UserParams';
 import { IPAginationUsers } from '../../shared/Models/PaginationUsers';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { response } from 'express';
 import { DirectoryParams } from '../../shared/Models/DirectoryParams';
 import { IPaginationDirectories } from '../../shared/Models/PaginationDirectories';
@@ -42,9 +42,7 @@ export class AdminService {
       );
   }
 
-  getDirectoriesInWorkspace(
-    DirectoryParams: DirectoryParams,
-  ) {
+  getDirectoriesInWorkspace(DirectoryParams: DirectoryParams) {
     let params = new HttpParams();
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
@@ -84,6 +82,25 @@ export class AdminService {
       .pipe(
         map((response) => {
           return response.body;
+        })
+      );
+  }
+
+  updateUserLock(id: number) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+    const body = { isLocked: true };
+
+    return this.http
+      .patch(this.baseUrl + 'users/' + id, body, { headers })
+      .pipe(
+        map(() => {
+          return true;
+        }),
+        catchError((err) => {
+          console.error('Error Updating lock: ', err);
+          return of(false);
         })
       );
   }

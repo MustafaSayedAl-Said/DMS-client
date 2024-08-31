@@ -58,6 +58,7 @@
                 class="fa"
               ></i>
             </th>
+            <th scope="col" style="cursor: default">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -79,12 +80,32 @@
             </td>
             <td class="text-nowrap" style="padding: 20px">
               <a
-                [routerLink]="['/users/workspace', item.workspaceId, item.workspaceName]"
-                [queryParams]="{fromUsers: true}"
+                [routerLink]="[
+                  '/users/workspace',
+                  item.workspaceId,
+                  item.workspaceName
+                ]"
+                [queryParams]="{ fromUsers: true }"
                 class="workspace-link"
               >
                 {{ item.workspaceName }}</a
               >
+            </td>
+            <td class="text-nowrap" style="padding: 10px;">
+              <div class="row align-items-center">
+                <div class="col-md-5">
+                  {{ item.isLocked ? "Locked" : "Unlocked" }}
+                </div>
+                <div class="col-md-3 text-right">
+                  <button
+                    class="btn btn-light btn-sm"
+                    (click)="toggleUserLock(item.id)"
+                  >
+                    <i class="fa fa-lock" *ngIf="item.isLocked"></i>
+                    <i class="fa fa-unlock" *ngIf="!item.isLocked"></i>
+                  </button>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>

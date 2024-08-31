@@ -150,7 +150,7 @@ export class DmsService {
           return true;
         }),
         catchError((err) => {
-          console.error('Error Adding directory: ', err);
+          console.error('Error Updating Visbility: ', err);
           return of(false);
         })
       );
