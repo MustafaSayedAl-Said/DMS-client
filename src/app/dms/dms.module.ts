@@ -6,11 +6,13 @@ import { SharedModule } from '../shared/shared.module';
 import { DirectoryContentsComponent } from './directory-contents/directory-contents.component';
 import { DmsRoutingModule } from './dms-routing.module';
 
+import { UsersComponent } from './admin/users/users.component';
+
 
 
 
 @NgModule({
-  declarations: [DmsComponent, DirectoryComponent, DirectoryContentsComponent],
+  declarations: [DmsComponent, DirectoryComponent, DirectoryContentsComponent, UsersComponent],
   imports: [
     CommonModule,
     SharedModule,

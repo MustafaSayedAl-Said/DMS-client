@@ -1,22 +1,24 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { IDocuments } from '../../shared/Models/Documents';
-import { DmsService } from '../dms.service';
-import { ActivatedRoute } from '@angular/router';
-import { DocumentParams } from '../../shared/Models/DocumentParams';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { IDocuments } from '../../../../shared/Models/Documents';
+import { DocumentParams } from '../../../../shared/Models/DocumentParams';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
-import { BreadcrumbService } from 'xng-breadcrumb';
-import { AccountService } from '../../account/account.service';
-import { ToastrService } from 'ngx-toastr';
-import { ConfirmationDialogComponent } from '../../core/confirmation-dialog/confirmation-dialog.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DmsService } from '../../../dms.service';
+import { ActivatedRoute } from '@angular/router';
+import { BreadcrumbService } from 'xng-breadcrumb';
+import { AccountService } from '../../../../account/account.service';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../../core/confirmation-dialog/confirmation-dialog.component';
+import { AdminService } from '../../admin.service';
+import { IWorkspace } from '../../../../shared/Models/Workspaces';
 
 @Component({
-  selector: 'app-directory-contents',
-  templateUrl: './directory-contents.component.html',
-  styleUrl: './directory-contents.component.scss',
+  selector: 'app-admin-directory',
+  templateUrl: './admin-directory.component.html',
+  styleUrl: './admin-directory.component.scss',
 })
-export class DirectoryContentsComponent implements OnInit {
+export class AdminDirectoryComponent implements OnInit {
   @ViewChild('search') searchTerm: ElementRef;
   workspaceName: string;
   id: number;
@@ -32,13 +34,14 @@ export class DirectoryContentsComponent implements OnInit {
   showDialog = false;
   sortField: string = '';
   sortOrder: string = '';
+  workspaceId: number;
 
   constructor(
     private dmsService: DmsService,
     private activatedRoute: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService,
-    private accountService: AccountService,
+    private adminService: AdminService,
     private toast: ToastrService,
     public dialog: MatDialog,
     private fb: FormBuilder
@@ -46,14 +49,24 @@ export class DirectoryContentsComponent implements OnInit {
   ngOnInit(): void {
     this.createDocumentFileForm();
     this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
+    console.log("id is " + this.id);
     this.name = this.activatedRoute.snapshot.paramMap.get('name');
-    this.accountService.getWorkspaceNameFromSubject().subscribe((name) => {
-      this.workspaceName = name;
-      this.breadcrumbService.set('dms', this.workspaceName);
-      this.breadcrumbService.set('dms/:id/:name', this.name);
 
-      console.log(this.activatedRoute.snapshot.params);
-      this.loadDocuments();
+    this.adminService.getWorkspaceDetails(this.id).subscribe({
+      next: (workspace: IWorkspace) => {
+        this.workspaceName = workspace.name;
+        this.workspaceId = workspace.id;
+        this.breadcrumbService.set(
+          `users/workspace/${this.workspaceId}/${this.workspaceName}`,
+          this.workspaceName
+        );
+        this.breadcrumbService.set(
+          `users/workspace/${this.workspaceId}/${this.workspaceName}/dms/${this.id}/${this.name}`,
+          this.name
+        );
+        
+        this.loadDocuments();
+      },
     });
   }
 

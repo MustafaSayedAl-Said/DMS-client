@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IDirectories } from '../../shared/Models/Directories';
 import { DmsService } from '../dms.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/confirmation-dialog/confirmation-dialog.component';
 import { ToastrService } from 'ngx-toastr';
-
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-directory',
@@ -17,15 +17,37 @@ export class DirectoryComponent implements OnInit {
   @Input() directory: IDirectories;
   editMode = false;
   directoryNameForm: FormGroup;
+  fromUsersTab: boolean;
+  workspaceId: number;
+  workspaceName: string;
+  fromUsers: boolean = false;
+
   constructor(
     private dmsService: DmsService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private toast: ToastrService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private accountService: AccountService
   ) {}
   ngOnInit(): void {
     this.createDirectoryNameForm();
+    this.route.queryParams.subscribe((params) => {
+      this.fromUsersTab = params['fromUsers'] === 'true';
+      this.workspaceId = +this.route.snapshot.paramMap.get('id');
+      this.workspaceName = this.route.snapshot.paramMap.get('name');
+      console.log('this is the name' + this.workspaceName);
+      if (this.workspaceName !== null) {
+        this.fromUsers = true;
+      }
+      // this.accountService.getWorkspaceNameFromSubject().subscribe((workspaceName:string) => {
+      //   if(workspaceName !== this.workspaceName){
+      //     this.fromUsers = true;
+      //   }
+      // })
+      console.log(this.workspaceId);
+    });
   }
 
   createDirectoryNameForm() {
@@ -50,9 +72,9 @@ export class DirectoryComponent implements OnInit {
       next: () => {
         this.editMode = false;
         this.toast.success('Name updated successfully');
-        this.router.navigate(["/404"]).then(() => {
+        this.router.navigate(['/404']).then(() => {
           this.router.navigate(['/dms']);
-        })
+        });
       },
       error: (err) => {
         this.editMode = false;
@@ -75,9 +97,9 @@ export class DirectoryComponent implements OnInit {
     this.dmsService.deleteDirectory(this.directory.id).subscribe({
       next: () => {
         this.toast.success('Directory deleted successfully');
-        this.router.navigate(["/404"]).then(() => {
+        this.router.navigate(['/404']).then(() => {
           this.router.navigate(['/dms']);
-        })
+        });
       },
       error: (err) => {
         this.toast.error('Error deleting directory', err);

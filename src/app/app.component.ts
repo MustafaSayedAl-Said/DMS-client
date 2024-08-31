@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AccountService } from './account/account.service';
 import { IWorkspace } from './shared/Models/Workspaces';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +10,13 @@ import { IWorkspace } from './shared/Models/Workspaces';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+  previousUrl: string | null = null;
   showHeader: boolean = false;
   title = 'DMS';
-  constructor(private router: Router, private accountService: AccountService) {
+  constructor(
+    private router: Router,
+    private accountService: AccountService,
+  ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.showHeader =

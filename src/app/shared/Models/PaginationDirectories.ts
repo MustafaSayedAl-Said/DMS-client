@@ -1,8 +1,8 @@
-import { IDirectories } from "./Directories"
+import { IDirectories } from './Directories';
 
 export interface IPaginationDirectories {
-    count: number
-    pageSize: number
-    pageNumber: number
-    data: IDirectories[]
-  }
+  count: number;
+  pageSize: number;
+  pageNumber: number;
+  data: IDirectories[];
+}

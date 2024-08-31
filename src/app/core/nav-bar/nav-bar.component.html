@@ -27,6 +27,9 @@
             >My Workspace</a
           >
         </li>
+        <li *ngIf="isAdmin">
+          <a class="nav-link px-2" routerLink="/users" routerLinkActive="active">Users</a>
+        </li>
         <!-- <li>
           <a
             class="nav-link px-2"
@@ -43,7 +46,6 @@
             type="button"
             routerLink="account/login"
             class="btn btn-outline-light me-2"
-            
           >
             Login
           </button>
@@ -85,7 +87,10 @@
           </li>
           <li class="divider dropdown-divider"></li>
           <li role="menuitem">
-            <a (click)="logout()" class="dropdown-item custom-dropdown-item" href="#"
+            <a
+              (click)="logout()"
+              class="dropdown-item custom-dropdown-item"
+              href="#"
               ><i class="fa fa-sign-out mx-1"></i> Logout</a
             >
           </li>

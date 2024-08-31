@@ -5,29 +5,25 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { map, Observable, of } from 'rxjs';
 import { AccountService } from '../../account/account.service';
-import {jwtDecode} from 'jwt-decode'
-import { IUser } from '../../shared/Models/user';
+import { map, Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
-  constructor(
-    private accountServices: AccountService,
-    private router: Router
-  ) {}
-
+export class adminAuthGuard implements CanActivate {
+  constructor(private accountService: AccountService, private router: Router) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    return this.accountServices.currentUser$.pipe(
+    return this.accountService.currentUser$.pipe(
       map((auth) => {
         const token = localStorage.getItem('token');
 
-        if (auth) {
-          console.log('User is authenticated');
+        if (auth && auth.isAdmin) {
+          console.log('User is an admin');
           return true;
         }
 
@@ -39,14 +35,22 @@ export class AuthGuard implements CanActivate {
             const currentTime = Date.now() / 1000;
             if (decodedToken.exp < currentTime) {
               console.log('Token is expired');
-              this.router.navigate(['account/login'], {
+              this.router.navigate([''], {
                 queryParams: { returnUrl: state.url },
               });
               return false;
             }
-
-            console.log('Token is valid');
-            return true;
+            const isAdmin = decodedToken.isAdmin;
+            if (isAdmin) {
+              console.log('User is an admin');
+              return true;
+            } else {
+              console.log('User is not an admin');
+              this.router.navigate(['/'], {
+                queryParams: { returnUrl: state.url },
+              });
+              return false;
+            }
           } catch (error) {
             console.error('Invalid token format', error);
             this.router.navigate(['account/login'], {
@@ -55,7 +59,6 @@ export class AuthGuard implements CanActivate {
             return false;
           }
         }
-
         console.log('No user authenticated and no valid token');
         this.router.navigate(['account/login'], {
           queryParams: { returnUrl: state.url },
@@ -64,5 +67,4 @@ export class AuthGuard implements CanActivate {
       })
     );
   }
-
 }

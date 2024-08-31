@@ -1,18 +1,19 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { IDirectories } from '../shared/Models/Directories';
-import { DmsService } from './dms.service';
-import { DirectoryParams } from '../shared/Models/DirectoryParams';
-import { AccountService } from '../account/account.service';
-import { BreadcrumbService } from 'xng-breadcrumb';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { IDirectories } from '../../../shared/Models/Directories';
+import { DirectoryParams } from '../../../shared/Models/DirectoryParams';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminService } from '../admin.service';
+import { BreadcrumbService } from 'xng-breadcrumb';
 import { ToastrService } from 'ngx-toastr';
+import { DmsService } from '../../dms.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-dms',
-  templateUrl: './dms.component.html',
-  styleUrl: './dms.component.scss',
+  selector: 'app-workspace-content',
+  templateUrl: './workspace-content.component.html',
+  styleUrl: './workspace-content.component.scss',
 })
-export class DmsComponent implements OnInit {
+export class WorkspaceContentComponent implements OnInit {
   @ViewChild('search') searchTerm: ElementRef;
   directories: IDirectories[];
   DirectoryParams = new DirectoryParams();
@@ -21,31 +22,30 @@ export class DmsComponent implements OnInit {
     { name: 'Name Ascending', value: 'NameAsc' },
     { name: 'Name Descending', value: 'NameDesc' },
   ];
-  token: string;
-  workspaceName: string = 'My Workspace';
+  workspaceName: string;
   workspaceId: number;
   directoryNameForm: FormGroup;
   showDialog = false;
 
   constructor(
-    private dmsService: DmsService,
-    private accountService: AccountService,
+    private adminService: AdminService,
     private breadcrumbService: BreadcrumbService,
     private fb: FormBuilder,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private dmsService: DmsService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.createDirectoryNameForm();
-    this.accountService.getWorkspaceNameFromSubject().subscribe(name => {
-      this.workspaceName = name;
-      this.breadcrumbService.set('dms', this.workspaceName);
-      console.log("Workspace Name: ", this.workspaceName);
-    })
-    this.accountService.getWorkspaceIdFromSubject().subscribe(id => {
-      this.workspaceId = id;
-      console.log("Workspace id: " +this.workspaceId);
-    })
+
+    this.workspaceId = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.workspaceName = this.route.snapshot.paramMap.get('name');
+
+    console.log(this.workspaceId);
+    this.breadcrumbService.set('users', 'Users');
+    this.breadcrumbService.set('users/workspace/:id/:name', this.workspaceName);
+
     this.getDirectories();
   }
 
@@ -54,26 +54,30 @@ export class DmsComponent implements OnInit {
       name: ['New Directory', [Validators.required]],
     });
   }
+
   get _name() {
     return this.directoryNameForm.get('name');
   }
+
   getDirectories() {
-    this.dmsService.getDirectories(this.DirectoryParams).subscribe({
+    this.DirectoryParams.workspaceId = this.workspaceId;
+    this.adminService
+      .getDirectoriesInWorkspace(this.DirectoryParams)
+      .subscribe({
         next: (res) => {
-            this.directories = res.data;
-            this.totalCount = res.count;
-            console.log(this.totalCount);
-            this.DirectoryParams.pageNumber = res.pageNumber;
-            this.DirectoryParams.pageSize = res.pageSize;
+          this.directories = res.data;
+          this.totalCount = res.count;
+          this.DirectoryParams.pageNumber = res.pageNumber;
+          this.DirectoryParams.pageSize = res.pageSize;
         },
         error: (error) => {
-            this.toast.error(error);
+          this.toast.error(error);
         },
         complete: () => {
-            console.log('Request completed');
-        }
-    });
-}
+          console.log('Request completed');
+        },
+      });
+  }
 
   onSortSelect(sort: Event) {
     let sortValue = (sort.target as HTMLInputElement).value;
@@ -89,35 +93,32 @@ export class DmsComponent implements OnInit {
     this.DirectoryParams.search = this.searchTerm.nativeElement.value;
     this.getDirectories();
   }
-
   OnReset() {
     this.searchTerm.nativeElement.value = '';
     this.DirectoryParams.search = '';
     this.getDirectories();
   }
 
-  openDialog(){
+  openDialog() {
     this.showDialog = true;
   }
-
-  cancel(){
+  cancel() {
     this.showDialog = false;
-    this.directoryNameForm.setValue({ name: "New Directory"});
+    this.directoryNameForm.setValue({ name: 'New Directory' });
   }
 
-  save(){
-    const newName = this._name.value
+  save() {
+    const newName = this._name.value;
     this.dmsService.addDirectory(newName, this.workspaceId).subscribe({
-      next:() =>{
+      next: () => {
         this.toast.success('Directory added successfully');
         this.showDialog = false;
-        this.directoryNameForm.setValue({ name: "New Directory"});
-        this.getDirectories()
-        
+        this.directoryNameForm.setValue({ name: 'New Directory' });
+        this.getDirectories();
       },
       error: (err) => {
         this.toast.error('Error deleting directory', err);
-      }
-    })
+      },
+    });
   }
 }

@@ -3,6 +3,7 @@ import { IDocuments } from '../shared/Models/Documents';
 import { DocumentParams } from '../shared/Models/DocumentParams';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PublicService } from './public.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-public',
@@ -23,7 +24,8 @@ export class PublicComponent implements OnInit {
 
   constructor(
     private publicService: PublicService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toast: ToastrService
   ) {}
   ngOnInit(): void {
     this.loadPublicDocuments();
@@ -39,6 +41,7 @@ export class PublicComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+        this.toast.error(error);
       }
     );
   }

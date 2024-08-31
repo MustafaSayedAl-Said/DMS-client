@@ -5,6 +5,10 @@ import { TestErrorComponent } from './core/test-error/test-error.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { adminAuthGuard } from './core/guards/admin-auth.guard';
+import { UsersComponent } from './dms/admin/users/users.component';
+import { WorkspaceContentComponent } from './dms/admin/workspace-content/workspace-content.component';
+import { DirectoryContentsComponent } from './dms/directory-contents/directory-contents.component';
 
 const routes: Routes = [
   {
@@ -30,10 +34,18 @@ const routes: Routes = [
   },
   {
     path: 'dms',
-    canActivate:[AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./dms/dms.module').then((mo) => mo.DmsModule),
     data: { breadcrumb: 'Workspace' },
   },
+  {
+    path: 'users',
+    loadChildren:() =>
+      import('./dms/admin/admin.module').then((mo) => mo.AdminModule),
+    canActivate: [adminAuthGuard],
+    data: { breadcrumb: 'Users' },
+  },
+
   {
     path: 'account',
     loadChildren: () =>
