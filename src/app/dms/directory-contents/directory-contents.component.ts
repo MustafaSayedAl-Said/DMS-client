@@ -215,4 +215,15 @@ export class DirectoryContentsComponent implements OnInit {
       },
     });
   }
+
+  downloadDocument(id: number, name:string) {
+    this.dmsService.downloadDocumentById(id, name).subscribe({
+      next: (response) => {
+        console.log('Download initiated successfully');
+      },
+      error: (err) => {
+        console.error('Download failed', err);
+      },
+    });
+  }
 }

@@ -49,7 +49,7 @@ export class AdminDirectoryComponent implements OnInit {
   ngOnInit(): void {
     this.createDocumentFileForm();
     this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
-    console.log("id is " + this.id);
+    console.log('id is ' + this.id);
     this.name = this.activatedRoute.snapshot.paramMap.get('name');
 
     this.adminService.getWorkspaceDetails(this.id).subscribe({
@@ -64,7 +64,7 @@ export class AdminDirectoryComponent implements OnInit {
           `users/workspace/${this.workspaceId}/${this.workspaceName}/dms/${this.id}/${this.name}`,
           this.name
         );
-        
+
         this.loadDocuments();
       },
     });
@@ -225,6 +225,17 @@ export class AdminDirectoryComponent implements OnInit {
       },
       error: (err) => {
         this.toast.error('Error adding document', err);
+      },
+    });
+  }
+
+  downloadDocument(id: number, name: string) {
+    this.dmsService.downloadDocumentById(id, name).subscribe({
+      next: (response) => {
+        console.log('Download initiated successfully');
+      },
+      error: (err) => {
+        console.error('Download failed', err);
       },
     });
   }

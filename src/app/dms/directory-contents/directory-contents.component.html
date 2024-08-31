@@ -63,13 +63,22 @@
               (dblclick)="onDocumentClick(item.documentContent)"
             >
               <td>
-                <div class="d-flex align-items-center" style="padding-top: 13px;">
+                <div
+                  class="d-flex align-items-center"
+                  style="padding-top: 13px"
+                >
                   <i
                     class="fa fa-file-text"
                     aria-hidden="true"
                     style="padding-right: 10px"
                   ></i>
                   <span class="text-wrap" style="flex: 1">{{ item.name }}</span>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    (click)="downloadDocument(item.id, item.name)"
+                  >
+                    <i class="fa fa-download"></i>
+                  </button>
                 </div>
               </td>
               <td class="text-nowrap" style="padding: 20px">

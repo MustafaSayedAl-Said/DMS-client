@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPaginationDirectories } from '../shared/Models/PaginationDirectories';
 import { catchError, map, of, throwError } from 'rxjs';
 import { DirectoryParams } from '../shared/Models/DirectoryParams';
 import { DocumentParams } from '../shared/Models/DocumentParams';
 import { IPaginationDocuments } from '../shared/Models/PaginationDocuments';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -193,4 +194,38 @@ export class DmsService {
         })
       );
   }
+
+  downloadDocumentById(id: number, name:string) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+    
+    return this.http
+      .get(this.baseUrl + 'documents/download/' + id, {
+        headers: headers,
+        responseType: 'blob',  // Set response type to 'blob'
+        observe: 'response',
+      })
+      .pipe(
+        map((response: HttpResponse<Blob>) => {
+          // Create a blob from the response
+          const blob = new Blob([response.body], { type: response.body.type });
+
+          // Create a link element, set href to the blob URL, and trigger the download
+          const downloadLink = document.createElement('a');
+          const url = window.URL.createObjectURL(blob);
+          downloadLink.href = url;
+          downloadLink.download = name;
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+
+          // Revoke the object URL after the download
+          window.URL.revokeObjectURL(url);
+
+          return true;
+        })
+      );
+  }
+
 }

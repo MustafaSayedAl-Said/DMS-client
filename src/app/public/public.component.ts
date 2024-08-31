@@ -4,6 +4,7 @@ import { DocumentParams } from '../shared/Models/DocumentParams';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PublicService } from './public.service';
 import { ToastrService } from 'ngx-toastr';
+import { response } from 'express';
 
 @Component({
   selector: 'app-public',
@@ -46,10 +47,9 @@ export class PublicComponent implements OnInit {
   }
 
   onSort(field: string) {
-    if (this.sortField === field){
-      this.sortOrder = this.sortOrder === 'Asc'? 'Desc' : 'Asc';
-    }
-    else {
+    if (this.sortField === field) {
+      this.sortOrder = this.sortOrder === 'Asc' ? 'Desc' : 'Asc';
+    } else {
       this.sortField = field;
       this.sortOrder = 'Asc';
     }
@@ -91,5 +91,11 @@ export class PublicComponent implements OnInit {
     if (target.classList.contains('custom-modal')) {
       this.closePopup();
     }
+  }
+
+  downloadDocument(id: number): void {
+    const downloadLink = document.createElement('a');
+    downloadLink.href = `https://localhost:7030/api/documents/download/${id}`;
+    downloadLink.click();
   }
 }
