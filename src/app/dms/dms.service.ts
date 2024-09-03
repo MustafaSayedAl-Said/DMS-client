@@ -1,4 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPaginationDirectories } from '../shared/Models/PaginationDirectories';
 import { catchError, map, of, throwError } from 'rxjs';
@@ -195,15 +200,15 @@ export class DmsService {
       );
   }
 
-  downloadDocumentById(id: number, name:string) {
+  downloadDocumentById(id: number, name: string) {
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', 'Bearer ' + token);
-    
+
     return this.http
       .get(this.baseUrl + 'documents/download/' + id, {
         headers: headers,
-        responseType: 'blob',  // Set response type to 'blob'
+        responseType: 'blob', // Set response type to 'blob'
         observe: 'response',
       })
       .pipe(
@@ -228,4 +233,23 @@ export class DmsService {
       );
   }
 
+  previewDocument(id: number) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+  
+    return this.http
+      .get(this.baseUrl + 'documents/preview/' + id, {
+        headers: headers,
+        responseType: 'blob',
+        observe: 'response'
+      })
+      .pipe(
+        map((response: HttpResponse<Blob>) => {
+          const url = window.URL.createObjectURL(response.body);
+          return url;
+        })
+      );
+  }
+  
 }

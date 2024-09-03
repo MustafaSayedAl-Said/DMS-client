@@ -5,6 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PublicService } from './public.service';
 import { ToastrService } from 'ngx-toastr';
 import { response } from 'express';
+import { DmsService } from '../dms/dms.service';
 
 @Component({
   selector: 'app-public',
@@ -26,7 +27,8 @@ export class PublicComponent implements OnInit {
   constructor(
     private publicService: PublicService,
     private sanitizer: DomSanitizer,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private dmsService: DmsService
   ) {}
   ngOnInit(): void {
     this.loadPublicDocuments();
@@ -75,11 +77,6 @@ export class PublicComponent implements OnInit {
     this.DocumentParams = new DocumentParams();
     this.loadPublicDocuments();
   }
-  onDocumentClick(documentPath: string): void {
-    this.selectedDocument =
-      this.sanitizer.bypassSecurityTrustResourceUrl(documentPath);
-    this.isPopupVisible = true;
-  }
 
   closePopup(): void {
     this.isPopupVisible = false;
@@ -97,5 +94,18 @@ export class PublicComponent implements OnInit {
     const downloadLink = document.createElement('a');
     downloadLink.href = `https://localhost:7030/api/documents/download/${id}`;
     downloadLink.click();
+  }
+
+  previewDocument(id: number): void {
+    this.dmsService.previewDocument(id).subscribe({
+      next: (url) => {
+        this.selectedDocument =
+          this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.isPopupVisible = true;
+      },
+      error: (err) => {
+        this.toast.error('Error previewing document', err);
+      },
+    });
   }
 }

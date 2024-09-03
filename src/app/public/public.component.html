@@ -52,7 +52,7 @@
         <tbody>
           <tr
             *ngFor="let item of documents"
-            (dblclick)="onDocumentClick(item.documentContent)"
+            (dblclick)="previewDocument(item.id)"
           >
             <td>
               <div class="d-flex align-items-center" style="padding-top: 7px">

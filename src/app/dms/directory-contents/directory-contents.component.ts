@@ -18,6 +18,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class DirectoryContentsComponent implements OnInit {
   @ViewChild('search') searchTerm: ElementRef;
+  @ViewChild('documentIframe') documentIfram: ElementRef<HTMLIFrameElement>;
   workspaceName: string;
   id: number;
   name: string;
@@ -109,12 +110,6 @@ export class DirectoryContentsComponent implements OnInit {
     this.DocumentParams = new DocumentParams();
     this.loadDocuments();
   }
-  onDocumentClick(documentPath: string): void {
-    this.selectedDocument =
-      this.sanitizer.bypassSecurityTrustResourceUrl(documentPath);
-    this.isPopupVisible = true;
-  }
-
   closePopup(): void {
     this.isPopupVisible = false;
   }
@@ -216,13 +211,26 @@ export class DirectoryContentsComponent implements OnInit {
     });
   }
 
-  downloadDocument(id: number, name:string) {
+  downloadDocument(id: number, name: string) {
     this.dmsService.downloadDocumentById(id, name).subscribe({
       next: (response) => {
         console.log('Download initiated successfully');
       },
       error: (err) => {
         console.error('Download failed', err);
+      },
+    });
+  }
+
+  previewDocument(id: number): void {
+    this.dmsService.previewDocument(id).subscribe({
+      next: (url) => {
+        this.selectedDocument =
+          this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.isPopupVisible = true;
+      },
+      error: (err) => {
+        this.toast.error('Error previewing document', err);
       },
     });
   }
