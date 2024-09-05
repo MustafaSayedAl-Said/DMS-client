@@ -91,11 +91,11 @@ export class AccountService {
   }
 
   logout() {
+    this.router.navigateByUrl('/');
     localStorage.removeItem('token');
     this.currentUser.next(null);
     this.workspaceNameSubject.next(null);
     this.workspaceIdSubject.next(null);
-    this.router.navigateByUrl('/');
   }
 
   checkEmailExist(email: string) {

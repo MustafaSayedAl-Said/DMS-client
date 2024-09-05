@@ -30,7 +30,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         }
         if (err.status === 401) {
-          this.toast.error(err.error);
+          this.toast.error(err.error.errors[0]);
         }
         if (err.status === 404) {
           console.error('Error 404: Resource not found.');
