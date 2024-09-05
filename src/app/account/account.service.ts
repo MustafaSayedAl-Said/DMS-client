@@ -77,6 +77,7 @@ export class AccountService {
     return this.http.post(this._baseURL + 'users/register', value).pipe(
       map((user: IUser) => {
         if (user) {
+          this.router.navigateByUrl('/');
           localStorage.setItem('token', user.token);
           this.currentUser.next(user);
           this.getWorkspace().subscribe({
