@@ -9,6 +9,7 @@ import { adminAuthGuard } from './core/guards/admin-auth.guard';
 import { UsersComponent } from './dms/admin/users/users.component';
 import { WorkspaceContentComponent } from './dms/admin/workspace-content/workspace-content.component';
 import { DirectoryContentsComponent } from './dms/directory-contents/directory-contents.component';
+import { ActionLogsComponent } from './dms/admin/action-logs/action-logs.component';
 
 const routes: Routes = [
   {
@@ -44,6 +45,12 @@ const routes: Routes = [
       import('./dms/admin/admin.module').then((mo) => mo.AdminModule),
     canActivate: [adminAuthGuard],
     data: { breadcrumb: 'Users' },
+  },
+  {
+    path: 'logs',
+    canActivate: [adminAuthGuard],
+    component: ActionLogsComponent,
+    data: { breadcrumb: 'Action Logs' },
   },
 
   {

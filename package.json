@@ -23,6 +23,7 @@
     "@angular/platform-server": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.0",
+    "@microsoft/signalr": "^8.0.7",
     "angular-oauth2-oidc": "^17.0.2",
     "bootstrap": "^5.3.3",
     "bootswatch": "^5.3.3",

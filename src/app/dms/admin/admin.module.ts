@@ -4,9 +4,10 @@ import { WorkspaceContentComponent } from './workspace-content/workspace-content
 import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { DmsModule } from '../dms.module';
+import { ActionLogsComponent } from './action-logs/action-logs.component';
 
 @NgModule({
-  declarations: [WorkspaceContentComponent],
+  declarations: [WorkspaceContentComponent, ActionLogsComponent],
   imports: [CommonModule, AdminRoutingModule, SharedModule, DmsModule],
 })
 export class AdminModule {}
