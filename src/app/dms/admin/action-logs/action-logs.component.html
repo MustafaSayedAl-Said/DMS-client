@@ -10,7 +10,7 @@
       </div>
       <div class="col">
         <div class="font-weight-bold" style="font-weight: bold">
-          User: {{ item.UserName }} (ID: {{ item.UserId }})
+          User: {{ item.UserName }} (ID: {{ item.UserId !== null? item.UserId : "Unauthenticated" }})
         </div>
         <div class="font-weight-bold" style="font-weight: bold">
           Action Type:
@@ -21,8 +21,7 @@
               ? "Download"
               : "Preview"
           }}
-          | Document:
-          {{ item.DocumentId === null ? item.DocumentName : item.DocumentId }}
+          | Document: {{ item.DocumentName }} {{ item.ActionType === 0? "": "(ID: " + item.DocumentId + ")"}}
         </div>
         <div class="font-weight-bold" style="font-weight: bold">
           Date: {{ item.CreationDate }}

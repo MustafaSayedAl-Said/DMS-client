@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SignalrService } from '../signalr.service';
 import { ActionLog } from '../../../shared/Models/ActionLog';
+import { AdminService } from '../admin.service';
+
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-action-logs',
@@ -10,7 +13,11 @@ import { ActionLog } from '../../../shared/Models/ActionLog';
 export class ActionLogsComponent implements OnInit {
   actionLogs: ActionLog[] = [];
 
-  constructor(private signalRService: SignalrService) {}
+  constructor(
+    private signalRService: SignalrService,
+    private adminService: AdminService,
+    private toast: ToastrService
+  ) {}
   ngOnInit(): void {
     this.signalRService.startConnection();
     this.signalRService.addNotificationListener((message: string) => {
@@ -41,9 +48,38 @@ export class ActionLogsComponent implements OnInit {
         console.error('Error processing notification: ', error);
       }
     });
+    this.loadLogs();
   }
 
-  print() {
-    console.log(this.actionLogs[0].DocumentId);
+  loadLogs() {
+    this.adminService.getActionLogs().subscribe(
+      (res) => {
+        console.log('Server Response:', res); // Log the raw response from the server
+
+        // Check if response exists and if it contains the expected data
+        if (res && Array.isArray(res)) {
+          this.actionLogs = res.map((log) => ({
+            Id: log.id, // Ensure that the response field matches 'Id'
+            ActionType: log.actionType, // Provide fallback values
+            UserId: log.userId,
+            DocumentId: log.documentId,
+            UserName: log.userName || 'Unknown',
+            DocumentName: log.documentName || 'Unknown',
+            CreationDate: log.creationDate
+              ? new Date(log.creationDate)
+              : new Date(), // Handle date parsing
+          }));
+
+          console.log('Mapped Action Logs:', this.actionLogs); // Log the mapped action logs
+        } else {
+          console.error('Unexpected response format:', res);
+          this.toast.error('Failed to load action logs, unexpected format.');
+        }
+      },
+      (error) => {
+        console.error('HTTP request error:', error);
+        this.toast.error('Failed to fetch action logs.');
+      }
+    );
   }
 }

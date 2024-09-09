@@ -2,11 +2,12 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserParams } from '../../shared/Models/UserParams';
 import { IPAginationUsers } from '../../shared/Models/PaginationUsers';
-import { BehaviorSubject, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, throwError } from 'rxjs';
 import { response } from 'express';
 import { DirectoryParams } from '../../shared/Models/DirectoryParams';
 import { IPaginationDirectories } from '../../shared/Models/PaginationDirectories';
 import { IWorkspace } from '../../shared/Models/Workspaces';
+import { ActionLog } from '../../shared/Models/ActionLog';
 
 @Injectable({
   providedIn: 'root',
@@ -101,6 +102,26 @@ export class AdminService {
         catchError((err) => {
           console.error('Error Updating lock: ', err);
           return of(false);
+        })
+      );
+  }
+
+  getActionLogs() {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + token);
+    return this.http
+      .get<any[]>(this.baseUrl + 'actionlogs', {
+        headers: headers,
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        }),
+        catchError((error) => {
+          console.error('Error fetching action logs:', error);
+          return throwError(() => new Error('Failed to fetch action logs.'));
         })
       );
   }

@@ -1,7 +1,7 @@
 export interface ActionLog{
     Id: number;
     ActionType: number;
-    UserId: number;
+    UserId: number | null;
     DocumentId: number | null;
     UserName: string;
     DocumentName: string;
