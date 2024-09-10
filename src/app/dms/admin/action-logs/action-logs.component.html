@@ -24,7 +24,7 @@
           | Document: {{ item.DocumentName }} {{ item.ActionType === 0? "": "(ID: " + item.DocumentId + ")"}}
         </div>
         <div class="font-weight-bold" style="font-weight: bold">
-          Date: {{ item.CreationDate }}
+          Date: {{ item.CreationDate | date:'short' }}
         </div>
       </div>
       <div class="col-auto"></div>
