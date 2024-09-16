@@ -187,11 +187,12 @@ export class DirectoryContentsComponent implements OnInit {
         });
         this.fileName = '';
       } else {
-        this.selectedFile = event.target.files[0];
+        this.selectedFile = file;
         this.fileName = this.selectedFile.name;
         this.fileUploadForm.patchValue({
           file: this.selectedFile,
         });
+        console.log('Ay haga');
       }
     }
   }

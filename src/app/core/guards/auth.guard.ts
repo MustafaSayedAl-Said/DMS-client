@@ -7,7 +7,7 @@ import {
 } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { AccountService } from '../../account/account.service';
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode';
 import { IUser } from '../../shared/Models/user';
 @Injectable({
   providedIn: 'root',
@@ -64,5 +64,4 @@ export class AuthGuard implements CanActivate {
       })
     );
   }
-
 }

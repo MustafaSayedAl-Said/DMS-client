@@ -85,10 +85,11 @@ export class DmsService {
     return this.http
       .patch(this.baseUrl + 'directories/' + id, body, {
         headers,
+        responseType: 'text' as 'json',
       })
       .pipe(
-        map(() => {
-          // If the delete request is successful, return true
+        map((response) => {
+          console.log('Response: ', response);
           return true;
         }),
         catchError((err) => {
@@ -105,10 +106,13 @@ export class DmsService {
     headers = headers.set('Authorization', 'Bearer ' + token);
 
     return this.http
-      .delete(this.baseUrl + 'directories/' + id, { headers })
+      .delete(this.baseUrl + 'directories/' + id, {
+        headers,
+        responseType: 'text' as 'json',
+      })
       .pipe(
-        map(() => {
-          // If the delete request is successful, return true
+        map((response) => {
+          console.log('Response: ', response);
           return true;
         }),
         catchError((err) => {
@@ -128,10 +132,11 @@ export class DmsService {
       .post(
         this.baseUrl + 'directories',
         { name: name, workspaceId: workspaceId },
-        { headers }
+        { headers, responseType: 'text' as 'json' }
       )
       .pipe(
-        map(() => {
+        map((response) => {
+          console.log('Response: ', response);
           return true;
         }),
         catchError((err) => {
@@ -150,13 +155,15 @@ export class DmsService {
     return this.http
       .patch(this.baseUrl + 'documents/' + id, body, {
         headers,
+        responseType: 'text' as 'json',
       })
       .pipe(
-        map(() => {
+        map((response) => {
+          console.log('Response: ', response);
           return true;
         }),
         catchError((err) => {
-          console.error('Error Updating Visbility: ', err);
+          console.error('Error Updating Visibility: ', err);
           return of(false);
         })
       );
@@ -167,15 +174,21 @@ export class DmsService {
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', 'Bearer ' + token);
 
-    return this.http.delete(this.baseUrl + 'documents/' + id, { headers }).pipe(
-      map(() => {
-        return true;
-      }),
-      catchError((err) => {
-        console.error('Error deleting document', err);
-        return of(false);
+    return this.http
+      .delete(this.baseUrl + 'documents/' + id, {
+        headers,
+        responseType: 'text' as 'json',
       })
-    );
+      .pipe(
+        map((response) => {
+          console.log('Response: ', response);
+          return true;
+        }),
+        catchError((err) => {
+          console.error('Error deleting document', err);
+          return of(false);
+        })
+      );
   }
 
   addDocument(file: File, directoryId: number) {
@@ -188,9 +201,13 @@ export class DmsService {
     headers = headers.set('Authorization', 'Bearer ' + token);
 
     return this.http
-      .post(this.baseUrl + 'documents', formData, { headers })
+      .post(this.baseUrl + 'documents', formData, {
+        headers,
+        responseType: 'text' as 'json',
+      })
       .pipe(
-        map(() => {
+        map((response) => {
+          console.log('Response: ', response);
           return true;
         }),
         catchError((err) => {
@@ -237,12 +254,12 @@ export class DmsService {
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', 'Bearer ' + token);
-  
+
     return this.http
       .get(this.baseUrl + 'documents/preview/' + id, {
         headers: headers,
         responseType: 'blob',
-        observe: 'response'
+        observe: 'response',
       })
       .pipe(
         map((response: HttpResponse<Blob>) => {
@@ -251,5 +268,4 @@ export class DmsService {
         })
       );
   }
-  
 }
