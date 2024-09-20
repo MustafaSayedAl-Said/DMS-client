@@ -37,15 +37,15 @@ export class DmsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createDirectoryNameForm();
-    this.accountService.getWorkspaceNameFromSubject().subscribe(name => {
+    this.accountService.getWorkspaceNameFromSubject().subscribe((name) => {
       this.workspaceName = name;
       this.breadcrumbService.set('dms', this.workspaceName);
-      console.log("Workspace Name: ", this.workspaceName);
-    })
-    this.accountService.getWorkspaceIdFromSubject().subscribe(id => {
+      console.log('Workspace Name: ', this.workspaceName);
+    });
+    this.accountService.getWorkspaceIdFromSubject().subscribe((id) => {
       this.workspaceId = id;
-      console.log("Workspace id: " +this.workspaceId);
-    })
+      console.log('Workspace id: ' + this.workspaceId);
+    });
     this.getDirectories();
   }
 
@@ -59,21 +59,21 @@ export class DmsComponent implements OnInit {
   }
   getDirectories() {
     this.dmsService.getDirectories(this.DirectoryParams).subscribe({
-        next: (res) => {
-            this.directories = res.data;
-            this.totalCount = res.count;
-            console.log(this.totalCount);
-            this.DirectoryParams.pageNumber = res.pageNumber;
-            this.DirectoryParams.pageSize = res.pageSize;
-        },
-        error: (error) => {
-            this.toast.error(error);
-        },
-        complete: () => {
-            console.log('Request completed');
-        }
+      next: (res) => {
+        this.directories = res.data;
+        this.totalCount = res.count;
+        console.log(this.totalCount);
+        this.DirectoryParams.pageNumber = res.pageNumber;
+        this.DirectoryParams.pageSize = res.pageSize;
+      },
+      error: (error) => {
+        this.toast.error(error);
+      },
+      complete: () => {
+        console.log('Request completed');
+      },
     });
-}
+  }
 
   onSortSelect(sort: Event) {
     let sortValue = (sort.target as HTMLInputElement).value;
@@ -96,28 +96,42 @@ export class DmsComponent implements OnInit {
     this.getDirectories();
   }
 
-  openDialog(){
+  openDialog() {
     this.showDialog = true;
   }
 
-  cancel(){
+  cancel() {
     this.showDialog = false;
-    this.directoryNameForm.setValue({ name: "New Directory"});
+    this.directoryNameForm.setValue({ name: 'New Directory' });
   }
 
-  save(){
-    const newName = this._name.value
+  save() {
+    const newName = this._name.value;
     this.dmsService.addDirectory(newName, this.workspaceId).subscribe({
-      next:() =>{
+      next: () => {
         this.toast.success('Directory added successfully');
         this.showDialog = false;
-        this.directoryNameForm.setValue({ name: "New Directory"});
-        this.getDirectories()
-        
+        this.directoryNameForm.setValue({ name: 'New Directory' });
+        this.getDirectories();
       },
       error: (err) => {
         this.toast.error('Error deleting directory', err);
-      }
-    })
+      },
+    });
+  }
+
+  onNameUpdate(event: { id: number; newName: string }) {
+    const directoryIndex = this.directories.findIndex(
+      (dir) => dir.id === event.id
+    );
+    if (directoryIndex !== -1) {
+      this.directories[directoryIndex].name = event.newName;
+    }
+  }
+
+  onDirectoryDeleted(directoryId: number) {
+    console.log('Directory deleted: ', directoryId);
+
+    this.getDirectories();
   }
 }

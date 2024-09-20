@@ -138,10 +138,20 @@ export class AdminDirectoryComponent implements OnInit {
     this.dmsService.updateDocumentVisibility(id).subscribe({
       next: () => {
         this.toast.success('Visibility updated successfully');
-        this.loadDocuments();
+
+        // Find the document index safely
+        const documentIndex = this.documents.findIndex((doc) => doc.id === id);
+
+        if (documentIndex !== -1) {
+          // Toggle the visibility status
+          this.documents[documentIndex].isPublic =
+            !this.documents[documentIndex].isPublic;
+        } else {
+          this.toast.error('Document not found');
+        }
       },
       error: (err) => {
-        this.toast.error('Error updating visiblity', err);
+        this.toast.error('Error updating visibility', err);
       },
     });
   }

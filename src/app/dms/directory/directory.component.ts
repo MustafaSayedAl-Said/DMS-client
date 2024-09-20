@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IDirectories } from '../../shared/Models/Directories';
 import { DmsService } from '../dms.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -21,6 +21,10 @@ export class DirectoryComponent implements OnInit {
   workspaceId: number;
   workspaceName: string;
   fromUsers: boolean = false;
+  @Output() nameUpdated: EventEmitter<{ id: number; newName: string }> =
+    new EventEmitter();
+
+  @Output() directoryDeleted: EventEmitter<number> = new EventEmitter();
 
   constructor(
     private dmsService: DmsService,
@@ -72,13 +76,8 @@ export class DirectoryComponent implements OnInit {
         this.editMode = false;
         this.toast.success('Name updated successfully');
 
-        if (this.workspaceName !== null) {
-          window.location.reload();
-        } else {
-          this.router.navigate(['/404']).then(() => {
-            this.router.navigate(['/dms']);
-          });
-        }
+        // Emit the new name to the parent component
+        this.nameUpdated.emit({ id: this.directory.id, newName });
       },
       error: (err) => {
         this.editMode = false;
@@ -101,14 +100,7 @@ export class DirectoryComponent implements OnInit {
     this.dmsService.deleteDirectory(this.directory.id).subscribe({
       next: () => {
         this.toast.success('Directory deleted successfully');
-        if (this.workspaceName !== null) {
-          window.location.reload();
-          this.toast.success('Directory deleted successfully');
-        } else {
-          this.router.navigate(['/404']).then(() => {
-            this.router.navigate(['/dms']);
-          });
-        }
+        this.directoryDeleted.emit(this.directory.id);
       },
       error: (err) => {
         this.toast.error('Error deleting directory', err);

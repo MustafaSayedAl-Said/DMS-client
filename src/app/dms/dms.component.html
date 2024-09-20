@@ -50,7 +50,11 @@
       </div>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col" *ngFor="let item of directories">
-          <app-directory [directory]="item"></app-directory>
+          <app-directory
+            [directory]="item"
+            (nameUpdated)="onNameUpdate($event)"
+            (directoryDeleted)="onDirectoryDeleted($event)"
+          ></app-directory>
         </div>
       </div>
       <!--pager-->

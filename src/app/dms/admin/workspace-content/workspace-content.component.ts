@@ -121,4 +121,19 @@ export class WorkspaceContentComponent implements OnInit {
       },
     });
   }
+
+  onNameUpdate(event: { id: number; newName: string }) {
+    const directoryIndex = this.directories.findIndex(
+      (dir) => dir.id === event.id
+    );
+    if (directoryIndex !== -1) {
+      this.directories[directoryIndex].name = event.newName;
+    }
+  }
+
+  onDirectoryDeleted(directoryId: number) {
+    console.log('Directory deleted: ', directoryId);
+
+    this.getDirectories();
+  }
 }
