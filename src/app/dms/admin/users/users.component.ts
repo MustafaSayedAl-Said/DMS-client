@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
     private adminService: AdminService,
     private toast: ToastrService,
     private router: Router,
-    private breadcrumbService: BreadcrumbService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +79,10 @@ export class UsersComponent implements OnInit {
     this.adminService.updateUserLock(id).subscribe({
       next: () => {
         this.toast.success('Lock updated successfully');
-        this.loadUsers();
+        let userIndex = this.users.findIndex((user) => user.id === id);
+        if (userIndex !== -1) {
+          this.users[userIndex].isLocked = !this.users[userIndex].isLocked;
+        }
       },
       error: (err) => {
         this.toast.error('Error updating lock', err);
