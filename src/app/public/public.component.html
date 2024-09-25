@@ -54,7 +54,7 @@
             *ngFor="let item of documents"
             (dblclick)="previewDocument(item.id)"
           >
-            <td style="width: auto;">
+            <td style="width: auto">
               <div class="d-flex align-items-center" style="padding-top: 7px">
                 <i
                   class="fa fa-file-text"
@@ -64,7 +64,7 @@
                 <span class="text-wrap" style="flex: 1">{{ item.name }}</span>
                 <button
                   class="btn btn-outline-secondary btn-sm"
-                  (click)="downloadDocument(item.id)"
+                  (click)="downloadDocument(item.id, item.name)"
                 >
                   <i class="fa fa-download"></i>
                 </button>

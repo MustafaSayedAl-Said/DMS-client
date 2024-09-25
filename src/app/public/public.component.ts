@@ -90,10 +90,15 @@ export class PublicComponent implements OnInit {
     }
   }
 
-  downloadDocument(id: number): void {
-    const downloadLink = document.createElement('a');
-    downloadLink.href = `https://localhost:7030/api/documents/download/${id}`;
-    downloadLink.click();
+  downloadDocument(id: number, name: string) {
+    this.dmsService.downloadDocumentById(id, name).subscribe({
+      next: (response) => {
+        console.log('Download initiated successfully');
+      },
+      error: (err) => {
+        console.error('Download failed', err);
+      },
+    });
   }
 
   previewDocument(id: number): void {
