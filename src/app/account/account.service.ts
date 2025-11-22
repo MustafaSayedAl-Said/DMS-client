@@ -9,7 +9,7 @@ import { IWorkspace } from '../shared/Models/Workspaces';
   providedIn: 'root',
 })
 export class AccountService {
-  _baseURL = 'https://localhost:7030/api/';
+  _baseURL = 'http://localhost:8080/api/';
   private currentUser = new BehaviorSubject<IUser>(null);
   currentUser$ = this.currentUser.asObservable();
   private workspaceIdSubject = new BehaviorSubject<number>(null);

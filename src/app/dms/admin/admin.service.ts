@@ -13,7 +13,7 @@ import { ActionLog } from '../../shared/Models/ActionLog';
   providedIn: 'root',
 })
 export class AdminService {
-  baseUrl = 'https://localhost:7030/api/';
+  baseUrl = 'http://localhost:8080/api/';
   constructor(private http: HttpClient) {}
 
   getUsersAndWorkspaces(UserParams: UserParams) {

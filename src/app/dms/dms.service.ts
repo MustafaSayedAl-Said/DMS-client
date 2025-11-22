@@ -16,7 +16,7 @@ import { response } from 'express';
   providedIn: 'root',
 })
 export class DmsService {
-  baseUrl = 'https://localhost:7030/api/';
+  baseUrl = 'http://localhost:8080/api/';
 
   constructor(private http: HttpClient) {}
 
