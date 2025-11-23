@@ -13,7 +13,7 @@ import { ActionLog } from '../../shared/Models/ActionLog';
   providedIn: 'root',
 })
 export class AdminService {
-  baseUrl = 'http://localhost:8080/api/';
+  baseUrl = 'https://dms-api-production-2145.up.railway.app/api/';
   constructor(private http: HttpClient) {}
 
   getUsersAndWorkspaces(UserParams: UserParams) {

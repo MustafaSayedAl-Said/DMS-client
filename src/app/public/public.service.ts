@@ -8,7 +8,7 @@ import { map } from "rxjs";
   providedIn: 'root',
 })
 export class PublicService {
-  baseUrl = 'http://localhost:8080/api/';
+  baseUrl = 'https://dms-api-production-2145.up.railway.app/api/';
 
   constructor(private http: HttpClient) {}
 

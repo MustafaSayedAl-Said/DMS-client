@@ -11,7 +11,7 @@ export class SignalrService {
   startConnection() {
     var token = localStorage.getItem('token');
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:8080/notificationHub', {
+      .withUrl('https://dms-api-production-2145.up.railway.app/notificationHub', {
         accessTokenFactory: () => {
           return token;
         },

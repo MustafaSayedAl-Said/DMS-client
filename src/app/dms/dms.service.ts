@@ -16,7 +16,7 @@ import { response } from 'express';
   providedIn: 'root',
 })
 export class DmsService {
-  baseUrl = 'http://localhost:8080/api/';
+  baseUrl = 'https://dms-api-production-2145.up.railway.app/api/';
 
   constructor(private http: HttpClient) {}
 
