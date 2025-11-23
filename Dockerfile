@@ -18,15 +18,11 @@ FROM nginx:stable-alpine
 # Copy built Angular app
 COPY --from=build /app/dist/web-ui/browser /usr/share/nginx/html
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config template
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Railway uses PORT environment variable
-# Create startup script to use dynamic port
-RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'export PORT=${PORT:-80}' >> /docker-entrypoint.sh && \
-    echo 'sed -i "s/listen 80/listen $PORT/g" /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
-    echo 'nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh
+# Expose port (Railway will set this dynamically)
+EXPOSE 8080
 
-CMD ["/docker-entrypoint.sh"]
+# Nginx will automatically substitute environment variables in templates
+CMD ["nginx", "-g", "daemon off;"]
