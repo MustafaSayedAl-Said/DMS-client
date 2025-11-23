@@ -2,27 +2,24 @@
 FROM node:20 AS build
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
 COPY . .
-
-# Build for production
 RUN npm run build -- --configuration production
 
 # ====== Stage 2: Serve with Nginx ======
 FROM nginx:stable-alpine
 
-# Copy built Angular app
+# Copy built app
 COPY --from=build /app/dist/web-ui/browser /usr/share/nginx/html
 
-# Copy nginx config template
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+# Copy nginx config and startup script
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-# Expose port (Railway will set this dynamically)
-EXPOSE 8080
+# Make script executable
+RUN chmod +x /docker-entrypoint.sh
 
-# Nginx will automatically substitute environment variables in templates
-CMD ["nginx", "-g", "daemon off;"]
+# Start with our custom script
+CMD ["/docker-entrypoint.sh"]
