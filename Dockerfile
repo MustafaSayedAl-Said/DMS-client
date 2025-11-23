@@ -14,12 +14,16 @@ FROM nginx:stable-alpine
 # Copy built app
 COPY --from=build /app/dist/web-ui/browser /usr/share/nginx/html
 
-# Copy nginx config and startup script
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy startup script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-# Make script executable
-RUN chmod +x /docker-entrypoint.sh
+# Fix line endings and make executable
+RUN apk add --no-cache dos2unix && \
+    dos2unix /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
-# Start with our custom script
-CMD ["/docker-entrypoint.sh"]
+# Start with our script
+ENTRYPOINT ["/docker-entrypoint.sh"]
